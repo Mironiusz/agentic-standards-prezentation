@@ -1,0 +1,99 @@
+/*
+ * Motyw prezentacji: ciemny, w duchu 3Blue1Brown (D-004).
+ * Paleta jest neutralna: nazwy mówią o barwie, a znaczenie kolorów w konkretnej prezentacji
+ * opisuje tabela w docs/conventions.md. Slajdy i komponenty używają wyłącznie tych tokenów,
+ * nigdy surowych wartości hex.
+ */
+
+:root {
+  --bg: #0d1017;
+  --surface: #151a23;
+  --surface-2: #1c2230;
+  --line: #2b3342;
+  --line-strong: #414b5e;
+
+  --text: #e9edf3;
+  --text-dim: #a3adbb;
+  --text-muted: #758091;
+
+  --accent: #ffd84d;
+  --accent-soft: rgb(255 216 77 / 0.16);
+
+  --c-blue: #5b8def;
+  --c-orange: #f5a142;
+  --c-mint: #9ae6d0;
+  --c-violet: #b18cff;
+  --c-pink: #ff7eb6;
+  --c-slate: #9fb3c8;
+
+  --c-alert: #ff6b6b;
+  --c-alert-soft: rgb(255 107 107 / 0.14);
+
+  --chip-a: rgb(159 179 200 / 0.24);
+  --chip-b: rgb(159 179 200 / 0.1);
+
+  --font-sans: 'IBM Plex Sans', system-ui, sans-serif;
+  --font-mono: 'IBM Plex Mono', ui-monospace, monospace;
+
+  --pad-x: 80px;
+  --pad-top: 56px;
+}
+
+html,
+body {
+  background: var(--bg);
+}
+
+.reveal {
+  font-family: var(--font-sans);
+  font-size: 30px;
+  font-weight: 400;
+  color: var(--text);
+  background: var(--bg);
+}
+
+.reveal .slides {
+  text-align: left;
+}
+
+.reveal .slides > section {
+  height: 100%;
+}
+
+.reveal .slide-frame {
+  position: relative;
+  box-sizing: border-box;
+  width: 1600px;
+  height: 900px;
+  padding: var(--pad-top) var(--pad-x) 40px;
+}
+
+.reveal ::selection {
+  background: var(--accent-soft);
+}
+
+.reveal .controls {
+  color: var(--text-muted);
+}
+
+.reveal .progress {
+  color: var(--accent);
+  height: 3px;
+}
+
+/* Numer slajdu w prawym górnym rogu, bo dolny róg zajmuje mapa etapów. */
+
+.reveal .slide-number {
+  top: 20px;
+  right: 28px;
+  bottom: auto;
+  background: transparent;
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+  font-size: 14px;
+}
+
+.reveal .slide-number a {
+  color: inherit;
+  text-decoration: none;
+}

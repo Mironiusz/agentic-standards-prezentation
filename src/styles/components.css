@@ -1,0 +1,369 @@
+/*
+ * Elementy wspólne dla wielu slajdów i style komponentów z src/components.
+ * Style jednego bloku slajdów leżą w jego katalogu.
+ */
+
+.reveal .slide-title {
+  margin: 0 0 28px;
+  font-size: 46px;
+  font-weight: 600;
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+  color: var(--text);
+}
+
+.reveal .kicker {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 20px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+/* Przypis ma ograniczoną szerokość, bo prawy dolny róg zajmuje mapa etapów. */
+
+.reveal .footnote {
+  position: absolute;
+  left: var(--pad-x);
+  bottom: 28px;
+  max-width: 800px;
+  margin: 0;
+  font-size: 17px;
+  line-height: 1.4;
+  color: var(--text-muted);
+}
+
+.reveal .accent {
+  color: var(--accent);
+}
+
+.reveal .mono {
+  font-family: var(--font-mono);
+}
+
+/* SVG */
+
+.reveal svg text {
+  fill: var(--text);
+  font-family: var(--font-sans);
+}
+
+.reveal svg .t-mono {
+  font-family: var(--font-mono);
+}
+
+.reveal svg .t-dim {
+  fill: var(--text-dim);
+}
+
+.reveal svg .t-muted {
+  fill: var(--text-muted);
+}
+
+/* Mapa etapów w prawym dolnym rogu (src/components/stage-map.js) */
+
+.reveal .stage-corner {
+  position: absolute;
+  right: 48px;
+  bottom: 22px;
+}
+
+.reveal .stage-map .sm-node rect {
+  fill: var(--surface);
+  stroke: var(--line-strong);
+  stroke-width: 1.5;
+}
+
+.reveal .stage-map .sm-node text {
+  fill: var(--text-muted);
+  font-family: var(--font-mono);
+  font-size: 15px;
+}
+
+.reveal .stage-map .sm-node.is-active rect {
+  fill: var(--accent-soft);
+  stroke: var(--accent);
+}
+
+.reveal .stage-map .sm-node.is-active text {
+  fill: var(--accent);
+}
+
+.reveal .stage-map .sm-arrow {
+  fill: none;
+  stroke: var(--line-strong);
+  stroke-width: 1.5;
+}
+
+/* Tokeny (src/components/token-chips.js) */
+
+.reveal .chip rect {
+  stroke: var(--line-strong);
+  stroke-width: 1;
+}
+
+.reveal .chip--a rect {
+  fill: var(--chip-a);
+}
+
+.reveal .chip--b rect {
+  fill: var(--chip-b);
+}
+
+.reveal svg .chip-text {
+  white-space: pre;
+}
+
+.reveal svg .chip-id {
+  font-size: 15px;
+  fill: var(--text-muted);
+}
+
+/* Przestrzeń wektorów (src/components/space3d.js) */
+
+.reveal .s3-grid line {
+  stroke: var(--line);
+  stroke-width: 1;
+  opacity: 0.55;
+}
+
+.reveal .s3-axis {
+  stroke: var(--line-strong);
+  stroke-width: 1.5;
+}
+
+.reveal .s3-item {
+  color: var(--text-dim);
+}
+
+.reveal .s3-arrow line {
+  stroke: currentColor;
+  stroke-width: 4;
+  stroke-linecap: round;
+}
+
+.reveal .s3-arrow line.s3-dashed {
+  stroke-width: 3;
+  stroke-dasharray: 8 8;
+}
+
+.reveal .s3-arrow path,
+.reveal .s3-point circle {
+  fill: currentColor;
+}
+
+.reveal .s3-item text {
+  fill: currentColor;
+  font-size: 24px;
+  font-weight: 500;
+}
+
+.reveal .s3-accent {
+  color: var(--accent);
+}
+
+.reveal .s3-blue {
+  color: var(--c-blue);
+}
+
+.reveal .s3-orange {
+  color: var(--c-orange);
+}
+
+.reveal .s3-mint {
+  color: var(--c-mint);
+}
+
+.reveal .s3-violet {
+  color: var(--c-violet);
+}
+
+.reveal .s3-pink {
+  color: var(--c-pink);
+}
+
+.reveal .s3-neutral {
+  color: var(--text);
+}
+
+.reveal .s3-muted {
+  color: var(--text-muted);
+}
+
+/* Ikony zamiast brakujących znaków (src/components/icons.js) */
+
+.reveal .icon {
+  display: inline-block;
+  vertical-align: -0.12em;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2.2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.reveal .svg-arrow {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2.2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.reveal .svg-check,
+.reveal .svg-cross {
+  fill: none;
+  stroke-width: 3;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.reveal .svg-check {
+  stroke: var(--c-mint);
+}
+
+.reveal .svg-cross {
+  stroke: var(--c-alert);
+}
+
+/* reset.css z reveal.js zeruje indeksy dolne, więc przywracamy je wszędzie. */
+
+.reveal sub {
+  vertical-align: sub;
+  font-size: 0.72em;
+}
+
+/* Diagramy przepływu (src/components/flow.js). Kolor węzła: klasa is-* ustawia --fl-color. */
+
+.reveal .fl-box {
+  fill: var(--surface);
+  stroke: var(--line-strong);
+  stroke-width: 1.5;
+}
+
+.reveal .fl-label {
+  font-size: 25px;
+  fill: var(--text);
+}
+
+.reveal .fl-sub {
+  font-family: var(--font-mono);
+  font-size: 18px;
+  fill: var(--text-muted);
+}
+
+.reveal .fl-link {
+  fill: none;
+  stroke: var(--line-strong);
+  stroke-width: 2;
+}
+
+.reveal .fl-head {
+  fill: var(--line-strong);
+}
+
+.reveal .fl-node.is-accent {
+  --fl-color: var(--accent);
+}
+
+.reveal .fl-node.is-blue {
+  --fl-color: var(--c-blue);
+}
+
+.reveal .fl-node.is-orange {
+  --fl-color: var(--c-orange);
+}
+
+.reveal .fl-node.is-mint {
+  --fl-color: var(--c-mint);
+}
+
+.reveal .fl-node.is-violet {
+  --fl-color: var(--c-violet);
+}
+
+.reveal .fl-node.is-pink {
+  --fl-color: var(--c-pink);
+}
+
+.reveal .fl-node.is-alert {
+  --fl-color: var(--c-alert);
+}
+
+.reveal .fl-node:is(.is-accent, .is-blue, .is-orange, .is-mint, .is-violet, .is-pink, .is-alert) .fl-box {
+  fill: color-mix(in srgb, var(--fl-color) 14%, transparent);
+  stroke: var(--fl-color);
+}
+
+.reveal .fl-node.is-dim .fl-label {
+  fill: var(--text-dim);
+}
+
+/* Pseudokod i przykładowe rekordy */
+
+.reveal .code-card {
+  box-sizing: border-box;
+  padding: 26px 30px;
+  background: var(--surface);
+  border: 1.5px solid var(--line);
+  border-radius: 12px;
+  font-family: var(--font-mono);
+  font-size: 24px;
+  line-height: 1.55;
+  white-space: pre;
+  color: var(--text);
+}
+
+.reveal .code-card .c-com {
+  color: var(--text-muted);
+}
+
+.reveal .code-card .c-str {
+  color: var(--c-mint);
+}
+
+.reveal .code-card .c-num,
+.reveal .code-card .c-hi {
+  color: var(--accent);
+}
+
+.reveal .code-card .c-fn {
+  color: var(--text-dim);
+}
+
+/* Strona z notatkami w PDF (npm run pdf, D-010): czytelna z kartki, bez angielskiego nagłówka */
+
+html.reveal-print .reveal .speaker-notes-pdf[data-layout='separate-page'] {
+  box-sizing: border-box;
+  padding: var(--pad-top) var(--pad-x);
+  font-family: var(--font-sans);
+  font-size: 26px;
+  line-height: 1.45;
+  color: var(--text);
+}
+
+html.reveal-print .reveal .speaker-notes-pdf[data-layout='separate-page']::before {
+  content: 'Notatki prezentera';
+  color: var(--text-muted);
+  opacity: 1;
+  margin-bottom: 16px;
+}
+
+html.reveal-print .reveal .speaker-notes-pdf p {
+  margin: 0 0 14px;
+}
+
+html.reveal-print .reveal .speaker-notes-pdf small {
+  font-size: 22px;
+  color: var(--accent);
+}
+
+html.reveal-print .reveal .speaker-notes-pdf strong {
+  color: var(--accent);
+  font-weight: 600;
+}
+
+html.reveal-print .reveal .speaker-notes-pdf[data-layout='separate-page']:last-child {
+  page-break-after: auto;
+}
