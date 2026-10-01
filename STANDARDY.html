@@ -1,0 +1,1022 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Standardy w pipeline</title>
+<style>
+:root {
+  --bg: #0d1017;
+  --surface: #151a23;
+  --surface-2: #1c2230;
+  --line: #2b3342;
+  --line-strong: #414b5e;
+  --text: #e9edf3;
+  --text-dim: #a3adbb;
+  --text-muted: #758091;
+  --accent: #ffd84d;
+  --accent-soft: rgb(255 216 77 / 0.12);
+  --c-blue: #5b8def;
+  --c-orange: #f5a142;
+  --c-mint: #9ae6d0;
+  --c-violet: #b18cff;
+  --c-pink: #ff7eb6;
+  --c-slate: #9fb3c8;
+  --c-alert: #ff6b6b;
+  --font-sans: 'IBM Plex Sans', 'Segoe UI', system-ui, sans-serif;
+  --font-mono: 'IBM Plex Mono', Consolas, ui-monospace, monospace;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-sans);
+  line-height: 1.5;
+}
+
+main { max-width: 1280px; margin: 0 auto; padding: 36px 16px 96px; }
+
+header h1 { font-size: clamp(28px, 4.2vw, 44px); line-height: 1.1; margin: 0 0 10px; letter-spacing: -0.01em; }
+header h1 span { color: var(--accent); }
+.lede { color: var(--text-dim); max-width: 82ch; margin: 0; font-size: 17px; }
+
+nav.toc { display: flex; flex-wrap: wrap; gap: 8px; margin: 22px 0 0; }
+nav.toc a {
+  color: var(--text-dim);
+  text-decoration: none;
+  border: 1px solid var(--line);
+  padding: 5px 13px;
+  border-radius: 999px;
+  font-size: 14px;
+}
+nav.toc a:hover { color: var(--text); border-color: var(--line-strong); }
+nav.toc a b { color: var(--accent); font-family: var(--font-mono); font-weight: 500; margin-right: 6px; }
+
+section { margin-top: 64px; scroll-margin-top: 16px; }
+section h2 { font-size: 26px; margin: 0 0 6px; }
+section h2 .num { color: var(--accent); font-family: var(--font-mono); font-weight: 500; margin-right: 12px; }
+.sub { color: var(--text-dim); margin: 0 0 18px; max-width: 92ch; }
+
+.frame { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 14px; }
+.scroll-x { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+.scroll-x > svg { display: block; width: 100%; height: auto; min-width: 980px; }
+
+svg text { font-family: var(--font-sans); }
+.mono { font-family: var(--font-mono); }
+.nw { white-space: nowrap; }
+
+.legend { display: flex; flex-wrap: wrap; gap: 8px 22px; margin: 14px 2px 0; color: var(--text-dim); font-size: 13.5px; }
+.legend span { display: inline-flex; align-items: center; gap: 8px; }
+.sw { width: 12px; height: 12px; border-radius: 3px; display: inline-block; flex: none; }
+.sw.diamond { transform: rotate(45deg); border-radius: 2px; width: 10px; height: 10px; }
+.sw.dash { width: 22px; height: 0; border-top: 2px dashed var(--c-orange); border-radius: 0; }
+.sw.q { width: 16px; height: 16px; border-radius: 50%; background: var(--accent); color: var(--bg); font-size: 11px; font-weight: 700; display: inline-flex; align-items: center; justify-content: center; }
+
+.matrix-wrap { overflow-x: auto; }
+table.matrix { border-collapse: separate; border-spacing: 0; width: 100%; min-width: 900px; font-size: 13.5px; }
+table.matrix th, table.matrix td { padding: 7px 8px; border-bottom: 1px solid var(--line); text-align: center; }
+table.matrix thead th { color: var(--text-dim); font-weight: 500; font-size: 12.5px; position: sticky; top: 0; background: var(--surface); cursor: pointer; user-select: none; }
+table.matrix thead th:first-child { cursor: default; }
+table.matrix th.row-h { text-align: left; font-weight: 500; white-space: nowrap; position: sticky; left: 0; background: var(--surface); z-index: 1; }
+table.matrix th.row-h .file { display: block; color: var(--text-muted); font-family: var(--font-mono); font-size: 11px; font-weight: 400; }
+table.matrix tr.group th { text-align: left; color: var(--text-muted); font-size: 11.5px; letter-spacing: 0.08em; text-transform: uppercase; padding-top: 18px; background: var(--surface); position: sticky; left: 0; }
+table.matrix tbody tr:not(.group):hover td, table.matrix tbody tr:not(.group):hover th.row-h { background: var(--surface-2); }
+table.matrix td.col-on, table.matrix th.col-on { background: var(--accent-soft) !important; }
+.chip {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 26px; height: 26px; border-radius: 7px;
+  font-family: var(--font-mono); font-weight: 600; font-size: 12.5px;
+  color: var(--bg); cursor: pointer; border: 0;
+}
+.chip:focus-visible { outline: 2px solid var(--text); outline-offset: 2px; }
+.chip.sel { outline: 2px solid var(--text); outline-offset: 2px; }
+.chip.P { background: var(--c-violet); }
+.chip.W { background: var(--c-blue); }
+.chip.B { background: var(--c-alert); }
+.chip.R { background: var(--c-slate); }
+.cell-info { margin-top: 12px; min-height: 48px; padding: 12px 14px; border-radius: 10px; background: var(--surface-2); color: var(--text-dim); font-size: 14.5px; }
+.cell-info strong { color: var(--text); font-weight: 600; }
+
+.graph-layout { display: grid; grid-template-columns: minmax(0, 1fr) 340px; gap: 16px; align-items: start; }
+.graph-layout svg { display: block; width: 100%; height: auto; }
+.graph-tools { display: flex; flex-wrap: wrap; gap: 10px 20px; align-items: center; margin-bottom: 8px; color: var(--text-dim); font-size: 13.5px; }
+.graph-tools label { display: inline-flex; gap: 8px; align-items: center; cursor: pointer; }
+.panel { background: var(--surface-2); border: 1px solid var(--line); border-radius: 12px; padding: 16px; font-size: 14px; color: var(--text-dim); position: sticky; top: 16px; }
+.panel h3 { margin: 0 0 2px; font-size: 18px; color: var(--text); }
+.panel .file { font-family: var(--font-mono); font-size: 12px; color: var(--text-muted); margin-bottom: 10px; display: block; }
+.panel .tag { display: inline-block; font-size: 11.5px; padding: 2px 9px; border-radius: 999px; color: var(--bg); font-weight: 600; margin-bottom: 10px; }
+.panel dl { margin: 0; }
+.panel dt { color: var(--text-muted); font-size: 11.5px; text-transform: uppercase; letter-spacing: 0.07em; margin-top: 10px; }
+.panel dd { margin: 2px 0 0; color: var(--text); }
+.panel .links { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 4px; }
+.panel .links button {
+  font: inherit; font-size: 12.5px; padding: 2px 9px; border-radius: 999px; cursor: pointer;
+  background: transparent; color: var(--text); border: 1px solid var(--line-strong);
+}
+.panel .links button.out { border-color: var(--accent); }
+.panel .links button.in { border-color: var(--c-blue); }
+.panel .hint { color: var(--text-muted); }
+
+.g-node { cursor: pointer; }
+.g-node:focus { outline: none; }
+.g-node:focus-visible circle { stroke: var(--text); stroke-width: 2.5; }
+.g-label { font-size: 13px; fill: var(--text-dim); pointer-events: none; }
+.g-hub-label { font-size: 13px; font-weight: 600; fill: var(--text); pointer-events: none; }
+.g-edge { fill: none; stroke: var(--c-slate); transition: stroke-opacity 0.15s, stroke 0.15s; }
+
+.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.stack { display: flex; flex-direction: column; gap: 8px; }
+.stack .lvl { display: flex; gap: 12px; align-items: baseline; padding: 10px 14px; border-radius: 10px; background: var(--surface-2); border-left: 4px solid var(--line-strong); }
+.stack .lvl b { font-family: var(--font-mono); color: var(--accent); font-weight: 500; min-width: 1.4em; }
+.stack .lvl em { font-style: normal; color: var(--text-dim); font-size: 13.5px; display: block; }
+.stack h3 { margin: 0 0 4px; font-size: 16px; color: var(--text-dim); font-weight: 500; }
+
+footer { margin-top: 72px; color: var(--text-muted); font-size: 13px; }
+
+@media (max-width: 900px) {
+  .graph-layout { grid-template-columns: 1fr; }
+  .panel { position: static; }
+  .two-col { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+<main>
+  <header>
+    <h1>Standardy w pipeline <span>agentowym</span></h1>
+    <p class="lede">Jak w quantasku 19 standardów, mapa i dwa rejestry wpinają się w łańcuch <span class="nw">seed</span> <span class="nw">-&gt; shape</span> <span class="nw">-&gt; PRD</span> <span class="nw">-&gt; plan</span> <span class="nw">-&gt; implementacja</span> <span class="nw">-&gt; review</span> <span class="nw">-&gt; pamięć</span> <span class="nw">-&gt; archiwum</span>. Stan na 2026-10-01, opis słowny i źródła w <span class="mono">STANDARDY.md</span>.</p>
+    <nav class="toc">
+      <a href="#pipeline"><b>1</b>Pipeline</a>
+      <a href="#macierz"><b>2</b>Standard x faza</a>
+      <a href="#graf"><b>3</b>Graf zależności</a>
+      <a href="#petla"><b>4</b>Pętla zwrotna</a>
+      <a href="#hierarchia"><b>5</b>Hierarchia</a>
+    </nav>
+  </header>
+
+  <section id="pipeline">
+    <h2><span class="num">01</span>Pipeline: od zgłoszenia do archiwum</h2>
+    <p class="sub">Cztery skille, osiem faz, bramka na każdej granicy. Przejścia między skillami są ręczne - jedynym automatem jest review wołany przez plan-implement. Najedź na fazę, żeby zobaczyć szczegóły.</p>
+    <div class="frame scroll-x"><svg id="svg-pipe" viewBox="0 0 1240 486" role="img" aria-label="Diagram pipeline'u agentowego"></svg></div>
+    <div class="legend">
+      <span><i class="sw diamond" style="background:var(--c-alert)"></i>blokada ryzyka</span>
+      <span><i class="sw diamond" style="background:var(--accent)"></i>decyzja człowieka albo automat</span>
+      <span><i class="sw diamond" style="background:var(--c-mint)"></i>kompletność planu</span>
+      <span><i class="sw diamond" style="background:var(--c-pink)"></i>werdykt review</span>
+      <span><i class="sw dash"></i>powrót do wcześniejszej fazy</span>
+      <span><i class="sw q">?</i>tu agent pyta człowieka (ile - ustala regulator)</span>
+    </div>
+    <h3 style="margin:34px 0 10px;font-size:17px;color:var(--text-dim);font-weight:500">Po review: strefa człowieka i potok GitLaba</h3>
+    <div class="frame scroll-x"><svg id="svg-ci" viewBox="0 0 1240 196" role="img" aria-label="Commit, Merge Request, CI i wdrożenie"></svg></div>
+  </section>
+
+  <section id="macierz">
+    <h2><span class="num">02</span>Który standard pracuje w której fazie</h2>
+    <p class="sub">Każdy wiersz to standard albo źródło, każda kolumna to faza. Litera mówi, w jakiej roli standard tam występuje. Kliknij literę, żeby przeczytać konkret, albo nagłówek kolumny, żeby ją podświetlić.</p>
+    <div class="frame">
+      <div class="matrix-wrap"><table class="matrix" id="matrix"></table></div>
+      <div class="legend">
+        <span><i class="chip P" style="width:20px;height:20px;cursor:default">P</i>kontrakt procesu: opisuje, jak ta faza działa albo jak wygląda jej artefakt</span>
+        <span><i class="chip W" style="width:20px;height:20px;cursor:default">W</i>wiedza: źródło, które agent otwiera w tej fazie</span>
+        <span><i class="chip B" style="width:20px;height:20px;cursor:default">B</i>bramka: blokuje albo egzekwuje (test, komenda, hook, kategoria ryzyka)</span>
+        <span><i class="chip R" style="width:20px;height:20px;cursor:default">R</i>przegląd ręczny w review, bez narzędzia</span>
+      </div>
+      <div class="cell-info" id="cell-info">Kliknij dowolną literę w tabeli.</div>
+    </div>
+  </section>
+
+  <section id="graf">
+    <h2><span class="num">03</span>Graf zależności między standardami</h2>
+    <p class="sub">Krawędź to odwołanie w treści pliku, grubość to liczba odwołań. Kolory to klastry. Kliknij węzeł: na żółto to, do czego odsyła, na niebiesko to, co odsyła do niego. Odwołania do mapy i rdzenia ma prawie każdy plik, więc domyślnie są schowane.</p>
+    <div class="frame">
+      <div class="graph-tools">
+        <label><input type="checkbox" id="toggle-hubs"> pokaż odwołania do mapy i rdzenia</label>
+        <span id="cluster-legend" class="legend" style="margin:0"></span>
+      </div>
+      <div class="graph-layout">
+        <svg id="svg-graph" viewBox="0 0 920 820" role="img" aria-label="Graf odwołań między standardami"></svg>
+        <aside class="panel" id="panel" aria-live="polite"></aside>
+      </div>
+    </div>
+  </section>
+
+  <section id="petla">
+    <h2><span class="num">04</span>Pętla zwrotna: jak standardy rosną</h2>
+    <p class="sub">Standardy nie są pisane raz. To, co jedno zadanie znajdzie, a czego nie da się zamknąć w jego zakresie, idzie do rejestrów, a stamtąd - po rozstrzygnięciu - do standardu, MVP.md albo kodu. Przykład: DEC-3 (jednostką kodu jest warstwa) po rozstrzygnięciu weszła naraz do naming, tests, documentation i agent_docs.</p>
+    <div class="frame scroll-x"><svg id="svg-loop" viewBox="0 0 1240 316" role="img" aria-label="Pętla zwrotna od review do standardu"></svg></div>
+  </section>
+
+  <section id="hierarchia">
+    <h2><span class="num">05</span>Hierarchia: kto wygrywa przy konflikcie</h2>
+    <p class="sub">Dwie osobne drabiny. Pierwsza mówi, który dokument jest źródłem prawdy. Druga, z rdzenia, mówi, która zasada wygrywa, gdy dwie się gryzą. Punkt 2 stoi nad punktem 3, więc żaden parametr procesu nie zwalnia z pytania o nieznany kontrakt.</p>
+    <div class="two-col">
+      <div class="frame stack">
+        <h3>Źródła prawdy</h3>
+        <div class="lvl" style="border-left-color:var(--accent)"><b>1</b><div>MVP.md<em>specyfikacja produktu, wygrywa ze wszystkim</em></div></div>
+        <div class="lvl" style="border-left-color:var(--c-violet)"><b>2</b><div>docs/standards/standard_*.md<em>źródło prawdy dla reguł, wygrywa z rdzeniem</em></div></div>
+        <div class="lvl" style="border-left-color:var(--c-slate)"><b>3</b><div>CLAUDE.md = AGENTS.md<em>tylko twarde zakazy bez kontekstu, reszta to odsyłacze</em></div></div>
+        <div class="lvl" style="border-left-color:var(--c-mint)"><b>4</b><div>agent_docs/memory<em>trwałe wzorce per warstwa, pisane przez agenta</em></div></div>
+        <div class="lvl" style="border-left-color:var(--line-strong)"><b>-</b><div>docs/database, artefakty plans/<em>stan faktyczny i stan zadania, nigdy źródło prawdy o regule</em></div></div>
+      </div>
+      <div class="frame stack">
+        <h3>Rozstrzyganie konfliktu reguł</h3>
+        <div class="lvl" style="border-left-color:var(--c-alert)"><b>1</b><div>Poprawność i integralność danych</div></div>
+        <div class="lvl" style="border-left-color:var(--c-alert)"><b>2</b><div>Brak zgadywania kontraktu<em>lepiej zapytać niż dorobić fallback</em></div></div>
+        <div class="lvl" style="border-left-color:var(--c-violet)"><b>3</b><div>Zgodność z docs/standards</div></div>
+        <div class="lvl"><b>4</b><div>Czytelność</div></div>
+        <div class="lvl"><b>5</b><div>Wydajność</div></div>
+        <div class="lvl"><b>6</b><div>DRY i unikanie zbędnej sprytności</div></div>
+      </div>
+    </div>
+  </section>
+
+  <footer>Źródło: C:\Quanta\quantask - docs/standards, CLAUDE.md, .claude, .agents, .codex, agent_docs, plans, .gitlab-ci.yml, makefile, tests/architecture. Liczby odwołań policzone wyszukiwaniem nazw plików w treści, więc liczą wzmianki, nie wagę merytoryczną.</footer>
+</main>
+
+<script>
+const NS = 'http://www.w3.org/2000/svg';
+
+/** Tworzy element SVG z atrybutami i od razu dopina go do rodzica. */
+function el(tag, attrs, parent) {
+  const node = document.createElementNS(NS, tag);
+  for (const [key, value] of Object.entries(attrs || {})) {
+    if (key === 'style') node.style.cssText = value;
+    else node.setAttribute(key, value);
+  }
+  if (parent) parent.appendChild(node);
+  return node;
+}
+
+/** Dopisuje do rodzica tekst SVG w podanym miejscu, z opcjonalną klasą, wyrównaniem i stylem. */
+function text(parent, x, y, content, opts) {
+  const o = opts || {};
+  const node = el('text', { x, y, 'text-anchor': o.anchor || 'start', style: o.style || '' }, parent);
+  if (o.cls) node.setAttribute('class', o.cls);
+  node.textContent = content;
+  return node;
+}
+
+/** Dodaje natywny dymek z opisem do elementu SVG. */
+function tip(parent, content) {
+  el('title', {}, parent).textContent = content;
+}
+
+/** Definiuje groty strzałek w kolorach używanych na diagramach. */
+function defineArrows(svg) {
+  const defs = el('defs', {}, svg);
+  const colors = { dim: 'var(--text-muted)', accent: 'var(--accent)', orange: 'var(--c-orange)', mint: 'var(--c-mint)', pink: 'var(--c-pink)', blue: 'var(--c-blue)' };
+  for (const [name, color] of Object.entries(colors)) {
+    const marker = el('marker', { id: `ah-${svg.id}-${name}`, viewBox: '0 0 10 10', refX: 8.5, refY: 5, markerWidth: 7, markerHeight: 7, orient: 'auto-start-reverse' }, defs);
+    el('path', { d: 'M0 0 L10 5 L0 10 z', style: `fill:${color}` }, marker);
+  }
+  return (name) => `url(#ah-${svg.id}-${name})`;
+}
+
+const TONE = {
+  dim: 'var(--text-muted)',
+  red: 'var(--c-alert)',
+  accent: 'var(--accent)',
+  mint: 'var(--c-mint)',
+  pink: 'var(--c-pink)',
+  orange: 'var(--c-orange)',
+  blue: 'var(--c-blue)',
+  violet: 'var(--c-violet)',
+  slate: 'var(--c-slate)',
+};
+
+const SKILL_COLOR = { shape: TONE.blue, prd: TONE.violet, impl: TONE.mint, review: TONE.pink };
+
+const PIPE = [
+  { top: 'zgłoszenie', title: 'SEED', file: '_SEED.md', skill: 'shape', ask: false,
+    tip: 'SEED: dosłowny zapis zgłoszenia z jawnym źródłem. Zapisywany jako pierwsza czynność, przed pytaniem, potem niemodyfikowalny. Może nieść regulator C:N.' },
+  { top: 'wywiad', title: 'SHAPE', file: '_SHAPE.md', skill: 'shape', ask: true,
+    tip: 'SHAPE: 11 sekcji, w nagłówku stan i Regulator: C:N. Jedno pytanie na raz, pytania z 10 kategorii ryzyka oznaczone Block: yes. Sekcja Podważenie własnych założeń nie może być pusta. Nietechniczny.' },
+  { top: 'faza A: co i po co', title: 'PRD', file: '_PRD.md', skill: 'prd', ask: true,
+    tip: 'PRD: 9 sekcji, odpowiada na co i dlaczego. Czarna lista: modele danych, kolumny, migracje, ścieżki, nazwy funkcji, biblioteki, deployment, sekrety. Kończy się potwierdzeniem człowieka.' },
+  { top: 'faza B: jak', title: 'PLAN', file: '_PLAN.md', skill: 'prd', ask: true,
+    tip: 'PLAN: 9 sekcji. Fakty z dowodem (kod:, cmd:, db:, dok:, ZAŁOŻENIE:) i datą, promień rażenia, kroki z konkretnymi nazwami plików i funkcji. Marker: plan w toku albo plan zamknięty.' },
+  { top: 'kroki 1-6', title: 'Implementacja', file: 'kod + _REVIEW.md', skill: 'impl', ask: true,
+    tip: 'plan-implement: przegląd kompletności planu przed pierwszą linijką kodu, implementacja krok po kroku, stop na wszystko nieprzewidziane. Plan nie rośnie, rośnie _REVIEW.md.' },
+  { top: 'krok 7', title: 'Pamięć', file: 'agent_docs/memory', skill: 'impl', ask: false,
+    tip: 'Wpis do agent_docs/memory/<grupa>/<moduł>.md tylko wtedy, gdy coś jest trwałym wzorcem. Append-only. Świadoma ocena, nie obowiązek.' },
+  { top: 'krok 8: review', title: 'Review DoD', file: 'raport: 5 sekcji', skill: 'review', ask: false,
+    tip: 'implementation-dod-review albo dod-reviewer (bez Edit i Write, tryb plan). Blockery, Ryzyka, Usprawnienia, Weryfikacja wszystkich 19 standardów, Werdykt z zakresem.' },
+  { top: 'krok 9', title: 'Archiwum', file: 'plans_finished/', skill: 'impl', ask: false,
+    tip: 'Cała inicjatywa przechodzi do plans_finished/ tylko przy końcowym ready dla całego zakresu albo jawnym zamknięciu. Przeniesienie natywne, nie git mv, historia nietknięta.' },
+];
+
+const GATES = [
+  { lines: ['seed zapisany', 'przed 1. pytaniem'], tone: 'dim' },
+  { lines: ['wywiad zamknięty,', '0 otwartych Block: yes', '+ ręczne wywołanie'], tone: 'red' },
+  { lines: ['potwierdzenie PRD', 'przez człowieka'], tone: 'accent' },
+  { lines: ['plan zamknięty:', '0 TODO, 0 pytań', '+ ręczne wywołanie'], tone: 'mint' },
+  { lines: ['podsumowanie', 'względem planu'], tone: 'dim' },
+  { lines: ['jedyny automat:', 'sam woła review'], tone: 'accent' },
+  { lines: ['ready dla całej', 'inicjatywy'], tone: 'pink' },
+];
+
+const BRACKETS = [
+  { from: 0, to: 1, label: 'plan-shape', skill: 'shape' },
+  { from: 2, to: 3, label: 'plan-prd', skill: 'prd' },
+  { from: 4, to: 7, label: 'plan-implement (w kroku 8 sam woła implementation-dod-review)', skill: 'impl' },
+];
+
+const LOOPS = [
+  { from: 3, to: 2, fromDx: -8, toDx: 8, depth: 292, labelX: 539, label: 'PLAN obalił założenie PRD -> powrót do fazy A' },
+  { from: 4, to: 2, fromDx: 0, toDx: -8, depth: 340, label: 'plan-implement widzi otwarte Block: yes w SHAPE -> powrót do plan-prd' },
+];
+
+/** Rysuje główny diagram pipeline'u: pas kontekstu, skille, fazy, bramki, pętle powrotne i pasy reguł przekrojowych. */
+function drawPipeline() {
+  const svg = document.getElementById('svg-pipe');
+  const arrow = defineArrows(svg);
+  const nodeW = 128;
+  const nodeY = 128;
+  const nodeH = 80;
+  const xs = PIPE.map((_, i) => 17 + i * 154);
+  const mid = (i) => xs[i] + nodeW / 2;
+
+  const ctx = el('g', {}, svg);
+  el('rect', { x: 17, y: 14, width: 1206, height: 52, rx: 10, style: 'fill:var(--surface-2);stroke:var(--line)' }, ctx);
+  text(ctx, 34, 36, 'Start sesji', { style: 'font-size:13px;font-weight:600;fill:var(--accent)' });
+  text(ctx, 34, 54, 'zawsze w kontekście', { style: 'font-size:11px;fill:var(--text-muted)' });
+  text(ctx, 170, 36, 'Hook SessionStart dopisuje wskazania, nie treść: MVP.md, mapa standardów, rejestr decyzji, agent_docs/', { style: 'font-size:13px;fill:var(--text)' });
+  text(ctx, 170, 54, 'Rdzeń CLAUDE.md = AGENTS.md: twarde zakazy, hierarchia konfliktów, odsyłacz do mapy. Reszta standardów ładuje się na żądanie.', { style: 'font-size:12px;fill:var(--text-dim)' });
+  tip(ctx, 'local_docs_context.py sprawdza tylko, czy pliki istnieją, i nigdy nie czyta ich treści, żeby start sesji był tani. W Codeksie wersja węższa: tylko mapa.');
+
+  for (const b of BRACKETS) {
+    const g = el('g', {}, svg);
+    const x1 = xs[b.from] + 4;
+    const x2 = xs[b.to] + nodeW - 4;
+    const color = SKILL_COLOR[b.skill];
+    el('path', { d: `M${x1} 114 V106 H${x2} V114`, style: `fill:none;stroke:${color};stroke-width:1.6` }, g);
+    text(g, (x1 + x2) / 2, 98, b.label, { anchor: 'middle', cls: 'mono', style: `font-size:12px;fill:${color}` });
+  }
+
+  PIPE.forEach((p, i) => {
+    const g = el('g', { tabindex: 0 }, svg);
+    const color = SKILL_COLOR[p.skill];
+    el('rect', { x: xs[i], y: nodeY, width: nodeW, height: nodeH, rx: 12, style: `fill:var(--surface-2);stroke:${color};stroke-width:1.6` }, g);
+    text(g, xs[i] + 12, nodeY + 20, p.top, { style: 'font-size:10.5px;fill:var(--text-muted)' });
+    text(g, xs[i] + 12, nodeY + 45, p.title, { style: 'font-size:16px;font-weight:600;fill:var(--text)' });
+    text(g, xs[i] + 12, nodeY + 66, p.file, { cls: 'mono', style: 'font-size:10.5px;fill:var(--text-dim)' });
+    if (p.ask) {
+      el('circle', { cx: xs[i] + nodeW - 15, cy: nodeY + 15, r: 9, style: 'fill:var(--accent)' }, g);
+      text(g, xs[i] + nodeW - 15, nodeY + 19, '?', { anchor: 'middle', style: 'font-size:12px;font-weight:700;fill:var(--bg)' });
+    }
+    tip(g, p.tip);
+  });
+
+  GATES.forEach((gate, i) => {
+    const g = el('g', {}, svg);
+    const x1 = xs[i] + nodeW;
+    const x2 = xs[i + 1] - 1;
+    const gx = x1 + 13;
+    const color = TONE[gate.tone];
+    el('line', { x1, y1: 168, x2, y2: 168, style: 'stroke:var(--text-muted);stroke-width:1.6', 'marker-end': arrow('dim') }, g);
+    el('rect', { x: -5, y: -5, width: 10, height: 10, transform: `translate(${gx} 168) rotate(45)`, style: `fill:${color}` }, g);
+    gate.lines.forEach((line, k) => {
+      text(g, gx, 232 + k * 13, line, { anchor: 'middle', style: `font-size:11px;fill:${color}` });
+    });
+  });
+
+  for (const loop of LOOPS) {
+    const g = el('g', {}, svg);
+    const fx = mid(loop.from) + loop.fromDx;
+    const tx = mid(loop.to) + loop.toDx;
+    const y = loop.depth;
+    const d = `M${fx} ${nodeY + nodeH} V${y - 10} Q${fx} ${y} ${fx - 10} ${y} H${tx + 10} Q${tx} ${y} ${tx} ${y - 10} V${nodeY + nodeH + 3}`;
+    el('path', { d, style: 'fill:none;stroke:var(--c-orange);stroke-width:1.6;stroke-dasharray:5 4', 'marker-end': arrow('orange') }, g);
+    text(g, loop.labelX || (fx + tx) / 2, y + 15, loop.label, { anchor: 'middle', style: 'font-size:11.5px;fill:var(--c-orange)' });
+  }
+
+  const archX = mid(7);
+  el('line', { x1: archX, y1: nodeY + nodeH, x2: archX, y2: 328, style: 'stroke:var(--text-muted);stroke-width:1.6', 'marker-end': arrow('dim') }, svg);
+  text(svg, archX, 346, 'dalej commit, MR i CI', { anchor: 'middle', style: 'font-size:11.5px;fill:var(--text-dim)' });
+  text(svg, archX, 360, '(schemat poniżej)', { anchor: 'middle', style: 'font-size:11px;fill:var(--text-muted)' });
+
+  const bands = [
+    { x1: xs[1], x2: xs[4] + nodeW, y: 386, h: 42, color: TONE.accent,
+      l1: 'Regulator C:N (0-100, domyślnie 40) steruje liczbą pytań w SHAPE, PLAN i implementacji',
+      l2: 'dno: 10 kategorii ryzyka blokującego i zakaz zgadywania kontraktu obowiązują przy każdej wartości',
+      tip: 'Pięć progów: 0-19 tylko pytania blokujące, 20-39 plus wybory drogie do odwrócenia, 40-59 plus wybory o różnych konsekwencjach (domyślny), 60-79 plus granice zakresu, 80-100 każda decyzja z więcej niż jednym wariantem. Decyzja bez pytania niesie frazę: Decyzja agenta przy C:N, bez pytania.' },
+    { x1: xs[5], x2: xs[7] + nodeW, y: 386, h: 42, color: TONE.red,
+      l1: 'Granice agenta: standard_git, standard_coolify, hook PreToolUse',
+      l2: 'commit i push robi człowiek, groźne komendy zablokowane fail-closed',
+      tip: 'block_dangerous_commands.py blokuje git reset --hard, git clean, git restore na drzewie roboczym, rekursywne kasowanie i kasowanie .git oraz .env. Coolify: odczyt tokenem READ bez pytania, zmiany tylko na wyraźną prośbę, kasowanie zakazane.' },
+    { x1: xs[0], x2: xs[7] + nodeW, y: 440, h: 32, color: TONE.mint,
+      l1: 'Stan procesu żyje w plikach plans/<INICJATYWA>/, nie w rozmowie: każdy skill wołany ponownie wczytuje artefakty i rusza od pierwszej niewypełnionej rzeczy',
+      tip: 'Dzięki temu przerwanie sesji nic nie kosztuje, a to samo zadanie da się dokończyć w Claude Code albo w Codeksie.' },
+  ];
+  for (const band of bands) {
+    const g = el('g', {}, svg);
+    el('rect', { x: band.x1, y: band.y, width: band.x2 - band.x1, height: band.h, rx: 9, style: `fill:var(--surface-2);stroke:${band.color};stroke-opacity:0.55` }, g);
+    const cx = (band.x1 + band.x2) / 2;
+    if (band.l2) {
+      text(g, cx, band.y + 17, band.l1, { anchor: 'middle', style: `font-size:12.5px;fill:${band.color}` });
+      text(g, cx, band.y + 33, band.l2, { anchor: 'middle', style: 'font-size:11.5px;fill:var(--text-dim)' });
+    } else {
+      text(g, cx, band.y + 20, band.l1, { anchor: 'middle', style: `font-size:12.5px;fill:${band.color}` });
+    }
+    tip(g, band.tip);
+  }
+}
+
+/** Rysuje drugi diagram: co dzieje się po review po stronie człowieka i potoku GitLaba. */
+function drawCi() {
+  const svg = document.getElementById('svg-ci');
+  const arrow = defineArrows(svg);
+  const boxes = [
+    { x: 17, w: 150, title: 'Commit', l1: 'robi człowiek,', l2: 'nigdy agent', color: TONE.violet,
+      tip: 'standard_git: git commit i git push są zakazane bezwarunkowo, także na wyraźną prośbę. Kryterium dla reszty: czy operacja dotyka historii.' },
+    { x: 193, w: 180, title: 'Merge Request', l1: 'do dev albo main', l2: 'jedyna droga zmiany', color: TONE.violet,
+      tip: 'Do main i dev zmiana wchodzi wyłącznie przez Merge Request. Potok uruchamia się tylko dla MR do tych dwóch gałęzi.' },
+    { x: 399, w: 360, title: 'CI: etap verify', l1: 'lint-python  lint-docs  typecheck  deadcode  deps', l2: 'security  audit  freshness  secrets (gitleaks)', color: TONE.blue, mono: true,
+      tip: 'ruff check i ruff format, prettier dla markdown, mypy, vulture, deptry, bandit, pip-audit (blokujący przy zmianie pyproject.toml), freshness (scalenie dev nie zmienia drzewa), gitleaks na diffie MR.' },
+    { x: 785, w: 240, title: 'CI: etap test', l1: 'test-unit (z tests/architecture)', l2: 'database: migracje + krytyczne', color: TONE.blue, mono: true,
+      tip: 'test-unit: pytest bez testów krytycznych i target_readonly, w tym 19 testów architektury (parytet, format planów, styl prozy, granice warstw). database: Postgres 18, role, alembic upgrade head, testy krytyczne bez obcej bazy.' },
+    { x: 1051, w: 172, title: 'Wdrożenie', l1: 'scalenie do gałęzi', l2: 'wydania (Coolify)', color: TONE.mint,
+      tip: 'standard_coolify: domyślna droga na wdrożenie to scalenie do gałęzi wydania. Wdrożenie ręczne jest wyjątkiem i nie zastępuje MR.' },
+  ];
+  boxes.forEach((b, i) => {
+    const g = el('g', {}, svg);
+    el('rect', { x: b.x, y: 26, width: b.w, height: 84, rx: 12, style: `fill:var(--surface-2);stroke:${b.color};stroke-width:1.6` }, g);
+    text(g, b.x + 14, 52, b.title, { style: 'font-size:15px;font-weight:600;fill:var(--text)' });
+    const style = b.mono ? 'font-size:11px;fill:var(--text-dim);font-family:var(--font-mono)' : 'font-size:12px;fill:var(--text-dim)';
+    text(g, b.x + 14, 74, b.l1, { style });
+    text(g, b.x + 14, 92, b.l2, { style });
+    tip(g, b.tip);
+    if (i < boxes.length - 1) {
+      const next = boxes[i + 1];
+      el('line', { x1: b.x + b.w, y1: 68, x2: next.x - 1, y2: 68, style: 'stroke:var(--text-muted);stroke-width:1.6', 'marker-end': arrow('dim') }, svg);
+    }
+  });
+  const notes = [
+    { x1: 17, x2: 373, t1: 'agent przygotowuje zmianę, człowiek publikuje historię', t2: 'standard_git', color: TONE.violet },
+    { x1: 399, x2: 1025, t1: '11 z 19 standardów ma tu swoją komendę; 8 sprawdza wyłącznie przegląd ręczny w review', t2: 'mapa standard -> narzędzie w standard_review.md', color: TONE.blue },
+    { x1: 1051, x2: 1223, t1: 'nie ręcznie, nie obok MR', t2: 'standard_coolify', color: TONE.mint },
+  ];
+  for (const n of notes) {
+    el('path', { d: `M${n.x1 + 4} 126 V132 H${n.x2 - 4} V126`, style: `fill:none;stroke:${n.color};stroke-opacity:0.6` }, svg);
+    text(svg, (n.x1 + n.x2) / 2, 152, n.t1, { anchor: 'middle', style: 'font-size:12px;fill:var(--text-dim)' });
+    text(svg, (n.x1 + n.x2) / 2, 170, n.t2, { anchor: 'middle', cls: 'mono', style: `font-size:11px;fill:${n.color}` });
+  }
+}
+
+const PHASES = [
+  { key: 'start', label: 'Start sesji' },
+  { key: 'shape', label: 'SEED / SHAPE' },
+  { key: 'prd', label: 'PRD' },
+  { key: 'plan', label: 'PLAN' },
+  { key: 'impl', label: 'Implementacja' },
+  { key: 'review', label: 'Review DoD' },
+  { key: 'mem', label: 'Pamięć / archiwum' },
+  { key: 'ci', label: 'MR i CI' },
+];
+
+const PLAN_GENERIC = ['W', 'Otwierany według mapy, gdy zadanie dotyka tego obszaru; ustalenia w Faktach z dowodem dok:.'];
+
+const MATRIX = [
+  { group: 'Nawigacja i źródła' },
+  { label: 'Rdzeń', file: 'CLAUDE.md = AGENTS.md', cells: {
+    start: ['W', 'Ładuje się zawsze: twarde zakazy, hierarchia konfliktów, odsyłacz do mapy. Celowo mały.'],
+    impl: ['B', 'Zakazy stosowalne bez kontekstu: commit i push robi człowiek, bez komentarzy linijkowych, znaki zakazane, zero fallbacków bez kontekstu.'],
+    ci: ['B', 'test_agent_docs_parity: AGENTS.md i CLAUDE.md muszą być identyczne po normalizacji (job test-unit).'] } },
+  { label: 'Mapa standardów', file: 'docs/standards/README.md', cells: {
+    start: ['W', 'Hook SessionStart wskazuje mapę jako punkt wejścia do standardów.'],
+    shape: ['W', 'Status standardu widać tylko w mapie. Status częściowy to sygnał nr 2: pytanie pada mimo znalezionej odpowiedzi.'],
+    plan: ['W', 'Tabela Co otworzyć przed zadaniem przekłada typ zadania na listę dokumentów.'],
+    review: ['B', 'Review zaczyna od mapy i przechodzi po wszystkich 19 standardach, nie tylko po tych, które wydają się właściwe.'],
+    mem: ['W', 'Sekcja Granice nierozstrzygnięte i długi zbiera znaleziska przekraczające jedno zadanie, z warunkiem powrotu.'] } },
+  { label: 'Rejestr decyzji', file: 'decision_registry.md', cells: {
+    start: ['W', 'Hook wskazuje rejestr decyzji świadomie odroczonych.'],
+    shape: ['W', 'Otwarty wpis DEC to sygnał nr 2: reguły świadomie nie ma, więc agent pyta zamiast zgadywać.'],
+    plan: ['W', 'Brak reguły może być zapisanym odroczeniem, a nie luką do wypełnienia domysłem.'],
+    review: ['W', 'Brak reguły w obszarze objętym odroczeniem nie jest zgłaszany - to byłby szum.'],
+    mem: ['W', 'Decyzja, której nie da się dziś podjąć odpowiedzialnie, trafia tu: wpływ, warianty, co blokuje, po czym poznamy.'] } },
+  { label: 'Specyfikacja produktu', file: 'MVP.md', cells: {
+    start: ['W', 'Hook: źródło prawdy o produkcie, wygrywa z czymkolwiek innym.'],
+    shape: ['W', 'Kategorie ryzyka odsyłają do MVP.md: R1, R6, R8, D14, D19, D21, par. 6, 8 i 9.'],
+    prd: ['W', 'Co i dlaczego: zachowanie produktu, bez rozwiązań technicznych.'],
+    plan: ['W', 'Stan docelowy schematu (par. 6) kontra stan faktyczny w docs/database - różnica sama jest informacją.'],
+    review: ['W', 'Zgodność zmiany ze specyfikacją.'] } },
+
+  { group: 'Proces agentowy' },
+  { label: 'agentic_workflow', file: 'standard_agentic_workflow.md', cells: {
+    shape: ['P', '10 kategorii ryzyka blokującego (Block: yes), regulator C:N z pięcioma progami, trafność i cztery sygnały.'],
+    prd: ['P', 'Czarna lista treści zakazanych w PRD i bramka potwierdzenia przed planem.'],
+    plan: ['P', 'Promień rażenia, zatrzymanie przy zakresie szerszym niż PRD, powrót do fazy A przy obalonym założeniu.'],
+    impl: ['P', 'Dziewięć kroków plan-implement, stop na wszystko nieprzewidziane, jedyne automatyczne przejście do review.'],
+    review: ['B', 'test_agent_docs_parity.py: parytet Claude Code i Codex (rdzeń, pary skilli, pary ról).'],
+    mem: ['P', 'Rozdz. 4.6: kiedy inicjatywa idzie do plans_finished/, jak wraca, co wolno zmienić przy przeniesieniu.'],
+    ci: ['B', 'test_agent_docs_parity w jobie test-unit.'] } },
+  { label: 'agent_docs', file: 'standard_agent_docs.md', cells: {
+    shape: ['P', 'Format SEED (dosłowny, ze źródłem, niemodyfikowalny) i SHAPE (11 sekcji, nagłówek z regulatorem).'],
+    prd: ['P', 'Format PRD: 9 sekcji, czarna lista.'],
+    plan: ['P', 'Format PLAN: Fakty jako identyfikator | dowód jednego z pięciu rodzajów | data, marker plan zamknięty, pusta sekcja pytań zaczynająca się od Brak.'],
+    impl: ['P', 'Format _REVIEW.md: log przebiegu zadania, nie trwała pamięć.'],
+    review: ['B', 'test_plan_document_contract.py pilnuje formatu planów zamkniętych.'],
+    mem: ['P', 'Szablon wpisu memory, ścieżka wynikająca ze ścieżki kodu (warstwa, DEC-3), append-only.'],
+    ci: ['B', 'test_plan_document_contract w jobie test-unit; kontrola obejmuje też plans_finished/.'] } },
+  { label: 'review', file: 'standard_review.md', cells: {
+    impl: ['P', 'plan-implement w kroku 8 sam woła review na wprowadzonych zmianach.'],
+    review: ['P', 'Raport w 5 sekcjach, 19 standardów w trzech stanach, komendy odpalane naprawdę, werdykt z zakresem, Definition of Done.'],
+    mem: ['B', 'Końcowe ready dla całej inicjatywy kwalifikuje katalog do archiwum. Review raportuje, ale niczego nie przenosi.'] } },
+  { label: 'git', file: 'standard_git.md', cells: {
+    impl: ['B', 'Agent nie commituje i nie pushuje; git add i rebase tylko na prośbę; hook PreToolUse blokuje reset --hard, clean, restore.'],
+    review: ['R', 'Przegląd ręczny.'],
+    mem: ['B', 'Archiwizacja natywnym przeniesieniem, nie git mv - indeksem i commitem zajmuje się człowiek.'],
+    ci: ['B', 'Do main i dev tylko przez Merge Request; job freshness wymaga scalonego dev.'] } },
+  { label: 'coolify', file: 'standard_coolify.md', cells: {
+    impl: ['B', 'Odczyt instalacji tokenem READ bez pytania, zmiany tokenem RWD tylko na wyraźną prośbę, kasowanie zakazane, tylko zasoby quantaska.'],
+    review: ['R', 'Przegląd ręczny.'],
+    ci: ['W', 'Wdrożenie przez scalenie do gałęzi wydania; wdrożenie ręczne nie zastępuje MR.'] } },
+
+  { group: 'Forma kodu' },
+  { label: 'formatting', file: 'standard_formatting.md', cells: {
+    shape: ['P', 'Proza artefaktów pisanych przez agenta: znaki zakazane, cudzysłowy, zakaz pogrubień inline.'],
+    prd: ['P', 'Ta sama reguła prozy.'],
+    plan: ['P', 'Ta sama reguła prozy; identyfikatory F-1, D-1 zostają zwykłym tekstem.'],
+    impl: ['W', 'Linia do 200 znaków, łamanie wywołań, znaki zakazane w kodzie.'],
+    review: ['B', 'ruff format --check, prettier --check dla markdown, test_prose_style.py.'],
+    ci: ['B', 'lint-python, lint-docs, test_prose_style w test-unit.'] } },
+  { label: 'code_quality', file: 'standard_code_quality.md', cells: {
+    plan: PLAN_GENERIC,
+    impl: ['W', 'Bez komentarzy linijkowych, docstringi, złożoność, typowanie, martwy kod, wydajność zapytań.'],
+    review: ['B', 'ruff check, mypy, vulture, deptry.'],
+    ci: ['B', 'lint-python, typecheck, deadcode, deps.'] } },
+  { label: 'naming', file: 'standard_naming.md', cells: {
+    plan: ['W', 'Konwencje nazw plus naming_registry z nazwami faktycznie użytymi.'],
+    impl: ['W', 'Nazwa funkcji jako czasownik o odpowiedzialności, nazwy plików i stałych z zapytaniami.'],
+    review: ['B', 'ruff check (reguła N).'],
+    ci: ['B', 'lint-python.'] } },
+  { label: 'documentation', file: 'standard_documentation.md', cells: {
+    impl: ['W', 'MODULE.md i MODULE_ALGORITHM.md dla warstwy, która ma reguły domenowe.'],
+    review: ['R', 'Przegląd ręczny.'],
+    mem: ['W', 'Linia orientacyjna pliku memory wskazuje ALGORITHM.md zamiast go kopiować.'] } },
+  { label: 'tests', file: 'standard_tests.md', cells: {
+    plan: ['W', 'Warstwy testów, testy obowiązkowe, zakres pokrycia - materiał do sekcji Definition of Done planu.'],
+    impl: ['W', 'Lokalny conftest, znaczniki integration i critical, testy scenariuszowe i zmian schematu.'],
+    review: ['B', 'pytest.'],
+    ci: ['B', 'test-unit oraz database: migracje i testy krytyczne na Postgresie.'] } },
+  { label: 'security', file: 'standard_security.md', cells: {
+    impl: ['W', 'Statyczna analiza bezpieczeństwa, realne dane pracowników na środowisku lokalnym.'],
+    review: ['B', 'bandit, pip-audit przy nowej albo podniesionej zależności.'],
+    ci: ['B', 'security, audit, secrets (gitleaks na diffie MR).'] } },
+
+  { group: 'Architektura i runtime' },
+  { label: 'architecture', file: 'standard_architecture.md', cells: {
+    shape: ['B', 'Kategoria 8, widoczność odczytu i uprawnienia: weryfikacja przez regułę jednego miejsca.'],
+    plan: ['W', 'Nowa jednostka kodu albo zmiana struktury; uprawnienia i delegowanie.'],
+    impl: ['W', 'Granica warstw, jedno miejsce dla uprawnień, helpery, loggery, cache, spójność bibliotek.'],
+    review: ['R', 'W mapie review: przegląd ręczny.'],
+    ci: ['B', 'test_layer_boundaries pilnuje kierunku importów między warstwami (job test-unit) - mapa review tego nie wymienia.'] } },
+  { label: 'config', file: 'standard_config.md', cells: {
+    plan: ['W', 'Klucze konfiguracji wchodzą do promienia rażenia zmiany.'],
+    impl: ['W', 'Trzy warstwy konfiguracji, walidacja wartości ze środowiska, sekrety poza repozytorium.'],
+    review: ['B', 'test_env_contract.py.'],
+    ci: ['B', 'test-unit.'] } },
+  { label: 'logging', file: 'standard_logging.md', cells: {
+    plan: PLAN_GENERIC,
+    impl: ['W', 'Poziomy, format wpisu, zapis wyjątku, identyfikator żądania i przebiegu.'],
+    review: ['B', 'ruff check (reguła G: leniwe placeholdery zamiast f-stringa).'],
+    ci: ['B', 'lint-python.'] } },
+  { label: 'errors', file: 'standard_errors.md', cells: {
+    plan: PLAN_GENERIC,
+    impl: ['W', 'Trzy klasy błędu, reakcja przy żądaniu i w zadaniu okresowym, trwały licznik prób, limity czasu.'],
+    review: ['R', 'Przegląd ręczny.'] } },
+
+  { group: 'Dane i domena' },
+  { label: 'database', file: 'standard_database.md', cells: {
+    shape: ['B', 'Kategoria 3 (schemat bazy) i 4 (forma zmiany schematu - zostaje blokująca także po rozstrzygnięciu).'],
+    plan: ['W', 'docs/database jako stan faktyczny kontra MVP.md par. 6 jako cel; ustalenia z dowodem db:.'],
+    impl: ['W', 'Rewizja Alembica z surowym SQL, łańcuch liniowy, uprawnienia w rewizji, zakaz logiki w bazie.'],
+    review: ['B', 'bandit (B608: sklejanie zapytania ze stringów).'],
+    ci: ['B', 'job database: alembic upgrade head i testy krytyczne.'] } },
+  { label: 'idempotency', file: 'standard_idempotency.md', cells: {
+    shape: ['B', 'Kategoria 7: idempotencja i deduplikacja.'],
+    plan: ['W', 'Klucz uzgadniania, backstop przed duplikatem w bazie, a nie w kodzie.'],
+    impl: ['W', 'Duplikat permanentny kontra okienkowy, idempotencja wywołania zewnętrznego.'],
+    review: ['R', 'Przegląd ręczny.'] } },
+  { label: 'time', file: 'standard_time.md', cells: {
+    shape: ['B', 'Kategoria 6: semantyka czasu i przesunięcia strefowego. Mapa podaje status częściowy, czyli sygnał nr 2.'],
+    plan: ['W', 'Para instant plus przesunięcie, okna czasowe doby lokalnej.'],
+    impl: ['W', 'Sesja przypięta do UTC, teraz z jednego miejsca, zapis pary jako jednej wartości.'],
+    review: ['R', 'Przegląd ręczny.'] } },
+  { label: 'worker', file: 'standard_worker.md', cells: {
+    plan: ['W', 'Kontrakt zadania okresowego plus MVP.md par. 11.'],
+    impl: ['W', 'Tryb uruchomienia, okna czasowe, blokady, limit czasu, wynik przebiegu.'],
+    review: ['B', 'test_worker_jobs_consistency.py.'],
+    ci: ['B', 'test-unit.'] } },
+];
+
+/** Buduje tabelę standard x faza i podpina klikanie liter oraz podświetlanie kolumn. */
+function drawMatrix() {
+  const table = document.getElementById('matrix');
+  const info = document.getElementById('cell-info');
+  const thead = document.createElement('thead');
+  const headRow = document.createElement('tr');
+  const corner = document.createElement('th');
+  corner.textContent = 'Standard / źródło';
+  corner.className = 'row-h';
+  headRow.appendChild(corner);
+  PHASES.forEach((phase, index) => {
+    const th = document.createElement('th');
+    th.textContent = phase.label;
+    th.dataset.col = String(index);
+    th.addEventListener('click', () => toggleColumn(index));
+    headRow.appendChild(th);
+  });
+  thead.appendChild(headRow);
+  table.appendChild(thead);
+
+  const tbody = document.createElement('tbody');
+  let selected = null;
+  for (const row of MATRIX) {
+    const tr = document.createElement('tr');
+    if (row.group) {
+      tr.className = 'group';
+      const th = document.createElement('th');
+      th.colSpan = PHASES.length + 1;
+      th.textContent = row.group;
+      tr.appendChild(th);
+      tbody.appendChild(tr);
+      continue;
+    }
+    const th = document.createElement('th');
+    th.className = 'row-h';
+    th.innerHTML = `${row.label}<span class="file">${row.file}</span>`;
+    tr.appendChild(th);
+    PHASES.forEach((phase, index) => {
+      const td = document.createElement('td');
+      td.dataset.col = String(index);
+      const cell = row.cells[phase.key];
+      if (cell) {
+        const button = document.createElement('button');
+        button.className = `chip ${cell[0]}`;
+        button.textContent = cell[0];
+        button.title = cell[1];
+        button.setAttribute('aria-label', `${row.label}, ${phase.label}: ${cell[1]}`);
+        button.addEventListener('click', () => {
+          if (selected) selected.classList.remove('sel');
+          selected = button;
+          button.classList.add('sel');
+          info.innerHTML = `<strong>${row.label} - ${phase.label}</strong><br>${cell[1]}`;
+        });
+        td.appendChild(button);
+      }
+      tr.appendChild(td);
+    });
+    tbody.appendChild(tr);
+  }
+  table.appendChild(tbody);
+
+  let activeCol = null;
+  /** Podświetla jedną kolumnę fazy albo zdejmuje podświetlenie przy ponownym kliknięciu. */
+  function toggleColumn(index) {
+    activeCol = activeCol === index ? null : index;
+    table.querySelectorAll('[data-col]').forEach((cell) => {
+      cell.classList.toggle('col-on', activeCol !== null && cell.dataset.col === String(activeCol));
+    });
+  }
+}
+
+const CLUSTERS = {
+  proces: { label: 'proces agentowy', color: TONE.violet },
+  runtime: { label: 'architektura i runtime', color: TONE.mint },
+  dane: { label: 'dane i domena', color: TONE.orange },
+  forma: { label: 'forma kodu', color: TONE.blue },
+  rejestr: { label: 'rejestry', color: TONE.slate },
+  hub: { label: 'huby', color: TONE.accent },
+};
+
+const NODES = {
+  agentic_workflow: { cluster: 'proces', file: 'standard_agentic_workflow.md', status: 'gotowy',
+    does: 'Łańcuch seed -> shape -> PRD -> plan -> implementacja -> review, system agent_docs, 10 kategorii ryzyka, regulator, archiwizacja, dualizm Claude Code i Codeksa, hooki, subagenci, test parytetu.',
+    not: 'Format artefaktów i wpisu memory -> agent_docs.', tool: 'test_agent_docs_parity.py' },
+  agent_docs: { cluster: 'proces', file: 'standard_agent_docs.md', status: 'gotowy',
+    does: 'Jak pisać SEED, SHAPE, PRD, PLAN, REVIEW i wpisy agent_docs/memory - jedyne źródło prawdy dla szablonów.',
+    not: 'Mechanizm łańcucha, kategorie ryzyka, parytet, archiwizacja -> agentic_workflow; proza -> formatting.', tool: 'test_plan_document_contract.py' },
+  review: { cluster: 'proces', file: 'standard_review.md', status: 'gotowy',
+    does: 'Proces review zmiany, dod-reviewer i implementation-dod-review, kolejność raportu, mapa standard -> narzędzie, Definition of Done.',
+    not: 'Artefakt _REVIEW.md (dziennik zadania) -> agentic_workflow; same reguły, które review sprawdza -> każdy we własnym standardzie.', tool: 'przegląd ręczny (ten dokument)' },
+  git: { cluster: 'proces', file: 'standard_git.md', status: 'gotowy',
+    does: 'Uprawnienia agenta wobec gita, role czterech gałęzi, kierunki scalania.',
+    not: 'Komendy -> docs/setup/git_commands.md; tożsamość i klucze -> docs/setup/git_ssh_windows.md.', tool: 'przegląd ręczny' },
+  coolify: { cluster: 'proces', file: 'standard_coolify.md', status: 'gotowy',
+    does: 'Uprawnienia agenta wobec instalacji, dwa tokeny, granica władania na współdzielonej instalacji, źródło prawdy o konfiguracji, droga wdrożenia.',
+    not: 'Czynności -> docs/setup/coolify_access.md; zmienne -> config; gałęzie i MR -> git; zakaz sekretów w repo -> DEC-15.', tool: 'przegląd ręczny' },
+  config: { cluster: 'runtime', file: 'standard_config.md', status: 'gotowy',
+    does: 'Trzy warstwy konfiguracji, podział pozycji środowiska na pliki, walidacja wartości ze środowiska, miejsce sekretów.',
+    not: 'Wykrywanie sekretów w kodzie i skan podatności -> security; poziom logowania -> logging.', tool: 'test_env_contract.py' },
+  architecture: { cluster: 'runtime', file: 'standard_architecture.md', status: 'gotowy',
+    does: 'Granica warstw, jedno miejsce dla matrycy uprawnień i predykatu widoczności, helpery wspólne, loggery, cache, spójność bibliotek, wywołania zewnętrzne.',
+    not: 'Wewnętrzna architektura jednej warstwy (brak materiału, nie decyzji); format logu -> logging; dostęp do danych -> database.', tool: 'w mapie: przegląd ręczny; w praktyce też test_layer_boundaries.py' },
+  logging: { cluster: 'runtime', file: 'standard_logging.md', status: 'gotowy',
+    does: 'Poziomy logowania, format i zawartość wpisu, zapis złapanego wyjątku, identyfikator żądania i przebiegu.',
+    not: 'Skąd logger -> architecture; co po błędzie -> errors.', tool: 'ruff check (reguła G)' },
+  errors: { cluster: 'runtime', file: 'standard_errors.md', status: 'gotowy',
+    does: 'Klasyfikacja błędu, reakcja przy żądaniu i w zadaniu okresowym, mapowanie na odpowiedź API, trwały licznik prób, limity czasu.',
+    not: 'Format zapisu błędu w logu -> logging; czy ponowienie zdubluje efekt -> idempotency.', tool: 'przegląd ręczny' },
+  idempotency: { cluster: 'dane', file: 'standard_idempotency.md', status: 'gotowy',
+    does: 'Klucz uzgadniania, backstop przed duplikatem w bazie, duplikat permanentny kontra okienkowy, idempotencja wywołania zewnętrznego.',
+    not: 'Dostęp do danych -> database; decyzja o ponowieniu po błędzie -> errors.', tool: 'przegląd ręczny' },
+  database: { cluster: 'dane', file: 'standard_database.md', status: 'gotowy',
+    does: 'Schemat jako źródło prawdy, rozdział od zrzutu stanu faktycznego, forma zmian schematu, zakaz logiki w bazie, dostęp do danych, współwłasność obiektu.',
+    not: 'Kształt tabel -> MVP.md par. 6 i 10; własności przebiegu -> idempotency; typy kolumn czasu -> time.', tool: 'bandit (B608)' },
+  time: { cluster: 'dane', file: 'standard_time.md', status: 'częściowy w mapie, gotowy w pliku',
+    does: 'Typ kolumny czasu, semantyka pary instant plus przesunięcie, konwersje, okna czasowe w danych.',
+    not: 'Harmonogram zadań okresowych -> worker.', tool: 'przegląd ręczny' },
+  worker: { cluster: 'dane', file: 'standard_worker.md', status: 'gotowy',
+    does: 'Kontrakty siedmiu zadań okresowych: tryb uruchomienia, okna czasowe, blokady, limit czasu.',
+    not: 'Błędy i ponowienia jednego zadania -> errors; czas jako temat ogólny -> time.', tool: 'test_worker_jobs_consistency.py' },
+  tests: { cluster: 'forma', file: 'standard_tests.md', status: 'gotowy',
+    does: 'Warstwy testów i nazwy plików, lokalny conftest, pokrycie, znaczniki integration i critical, testy scenariuszowe, API i zmian schematu.',
+    not: 'Architektura kodu produkcyjnego -> architecture.', tool: 'pytest' },
+  security: { cluster: 'forma', file: 'standard_security.md', status: 'gotowy',
+    does: 'Statyczna analiza bezpieczeństwa (bandit), skan podatności zależności (pip-audit), realne dane pracowników lokalnie.',
+    not: 'Higiena zależności -> code_quality; sekrety i konfiguracja -> config.', tool: 'bandit, pip-audit' },
+  code_quality: { cluster: 'forma', file: 'standard_code_quality.md', status: 'gotowy',
+    does: 'Komentarze w kodzie, automatyczne sprawdzanie stylu, złożoność, typowanie, martwy kod, spójność zależności, wydajność.',
+    not: 'Znaki i długość linii -> formatting; analiza bezpieczeństwa -> security; testy -> tests.', tool: 'ruff check, mypy, vulture, deptry' },
+  formatting: { cluster: 'forma', file: 'standard_formatting.md', status: 'gotowy',
+    does: 'Długość linii i łamanie wywołań, znaki zakazane, cudzysłowy, zakaz pogrubień inline w prozie, prettier dla markdown, szerokość tabel.',
+    not: 'Komentarze i docstringi -> code_quality.', tool: 'ruff format, prettier, test_prose_style.py' },
+  documentation: { cluster: 'forma', file: 'standard_documentation.md', status: 'gotowy',
+    does: 'Struktura MODULE.md i MODULE_ALGORITHM.md; jednostką jest warstwa (DEC-3).',
+    not: 'Dokumentacja procesu agentowego -> agent_docs.', tool: 'przegląd ręczny' },
+  naming: { cluster: 'forma', file: 'standard_naming.md', status: 'gotowy',
+    does: 'Konwencje nazw plików, funkcji, stałych z zapytaniami i testów.',
+    not: 'Rejestr nazw faktycznie używanych -> naming_registry.', tool: 'ruff check (reguła N)' },
+  naming_registry: { cluster: 'rejestr', file: 'naming_registry.md', status: 'rejestr, nie standard',
+    does: 'Rozwijalny rejestr nazw faktycznie używanych w repozytorium - stan faktyczny, nie docelowy.',
+    not: 'Konwencje -> naming.', tool: '-' },
+  decision_registry: { cluster: 'rejestr', file: 'decision_registry.md', status: 'rejestr, nie standard',
+    does: 'Decyzje świadomie odroczone: na co wpływa, warianty, co blokuje, po czym poznamy. Dziś 5 otwartych i 41 rozstrzygniętych.',
+    not: 'Decyzje już podjęte i dług zastany -> mapa, sekcja granic i długów.', tool: '-' },
+  mvp: { cluster: 'hub', file: 'MVP.md', status: 'specyfikacja produktu', label: 'MVP.md',
+    does: 'Cykl życia zadania, uprawnienia, schemat, kontrakt API, odrzucone alternatywy. Przy rozbieżności z czymkolwiek obowiązuje ono.',
+    not: '-', tool: '-' },
+  mapa: { cluster: 'hub', file: 'docs/standards/README.md', status: 'mapa standardów', label: 'mapa',
+    does: 'Punkt wejścia: status każdego standardu, zakres i granice, reguła odstępstwa, tabela Co otworzyć przed zadaniem, dziennik granic i długów.',
+    not: '-', tool: '-' },
+  rdzen: { cluster: 'hub', file: 'CLAUDE.md = AGENTS.md', status: 'rdzeń repozytorium', label: 'CLAUDE.md',
+    does: 'Twarde zakazy stosowalne bez kontekstu, hierarchia rozstrzygania konfliktów, odsyłacze do standardów. Obie kopie pilnowane testem parytetu.',
+    not: 'Uzasadnienia, wyjątki i przypadki graniczne -> standardy.', tool: 'test_agent_docs_parity.py' },
+};
+
+const EDGES = {
+  agent_docs: { agentic_workflow: 9, formatting: 2, config: 1, mapa: 1 },
+  agentic_workflow: { mvp: 9, rdzen: 17, agent_docs: 7, database: 2, mapa: 2, review: 1, decision_registry: 1 },
+  architecture: { mvp: 6, config: 2, mapa: 2, logging: 1, errors: 1, database: 1 },
+  code_quality: { formatting: 3, documentation: 3, mapa: 3, tests: 2, architecture: 2, security: 1, logging: 1 },
+  config: { decision_registry: 6, mvp: 4, logging: 2, time: 1, security: 1, database: 1, coolify: 1, architecture: 1, mapa: 1 },
+  coolify: { git: 4, config: 3, mapa: 2, mvp: 2, decision_registry: 1 },
+  database: { mvp: 12, time: 2, idempotency: 2, architecture: 2, naming: 1, errors: 1, mapa: 1, decision_registry: 1 },
+  documentation: { formatting: 1, mapa: 1 },
+  errors: { idempotency: 2, mvp: 2, logging: 1, architecture: 1, mapa: 1 },
+  formatting: { mapa: 3, database: 2, code_quality: 2, rdzen: 4 },
+  git: { mapa: 2, coolify: 1 },
+  idempotency: { errors: 2, mapa: 2, database: 1, mvp: 1 },
+  logging: { errors: 3, worker: 2, security: 2, architecture: 2, mapa: 2, config: 1, code_quality: 1 },
+  naming: { naming_registry: 2, mvp: 2, tests: 1, database: 1, architecture: 1, agent_docs: 1, mapa: 1, decision_registry: 1 },
+  review: { agentic_workflow: 6, mapa: 4, architecture: 2, worker: 1, time: 1, tests: 1, security: 1, naming: 1, logging: 1, idempotency: 1, git: 1, formatting: 1, errors: 1, documentation: 1, database: 1, coolify: 1, config: 1, code_quality: 1, agent_docs: 1 },
+  security: { config: 2, mapa: 2, logging: 1, database: 1, code_quality: 1 },
+  tests: { mvp: 5, review: 1, architecture: 1, mapa: 1 },
+  time: { mvp: 13, database: 4, mapa: 2, worker: 1, idempotency: 1, errors: 1, architecture: 1, rdzen: 1 },
+  worker: { mvp: 6, errors: 2, time: 1, logging: 1, idempotency: 1, agentic_workflow: 1, mapa: 1 },
+  mapa: { mvp: 26, rdzen: 9, config: 7, decision_registry: 7, formatting: 6, errors: 6, worker: 5, time: 5, logging: 5, idempotency: 5, database: 5, architecture: 5, naming_registry: 5, security: 4, naming: 4, code_quality: 4, agentic_workflow: 4, tests: 3, git: 3, documentation: 3, agent_docs: 3, review: 2, coolify: 2 },
+  decision_registry: { mvp: 22, config: 11, naming_registry: 6, mapa: 5, worker: 3, database: 3, architecture: 3, tests: 1, naming: 1, errors: 1, documentation: 1, rdzen: 1 },
+  naming_registry: { naming: 13, mvp: 8, errors: 2, database: 2, config: 2, logging: 1 },
+  rdzen: { mvp: 3, decision_registry: 2, mapa: 1, agentic_workflow: 1, coolify: 1, documentation: 1, git: 1, review: 1 },
+};
+
+const RING = ['agentic_workflow', 'agent_docs', 'review', 'git', 'coolify', null,
+  'config', 'architecture', 'logging', 'errors', null,
+  'idempotency', 'database', 'time', 'worker', null,
+  'tests', 'security', 'code_quality', 'formatting', 'documentation', 'naming', null,
+  'naming_registry', 'decision_registry', null];
+
+const HUB_IDS = new Set(['mapa', 'rdzen']);
+
+/** Rysuje graf odwołań: standardy na okręgu wg klastrów, huby w środku, i obsługuje wybór węzła z panelem szczegółów. */
+function drawGraph() {
+  const svg = document.getElementById('svg-graph');
+  const panel = document.getElementById('panel');
+  const toggle = document.getElementById('toggle-hubs');
+  const center = { x: 460, y: 410 };
+  const radius = 285;
+  const step = (Math.PI * 2) / RING.length;
+  const start = -Math.PI / 2 - step * 2;
+  const pos = {};
+
+  RING.forEach((id, i) => {
+    if (!id) return;
+    const angle = start + i * step;
+    pos[id] = { x: center.x + radius * Math.cos(angle), y: center.y + radius * Math.sin(angle), angle };
+  });
+  pos.mvp = { x: center.x, y: center.y - 70, hub: true };
+  pos.mapa = { x: center.x - 70, y: center.y + 50, hub: true };
+  pos.rdzen = { x: center.x + 70, y: center.y + 50, hub: true };
+
+  const merged = new Map();
+  for (const [from, targets] of Object.entries(EDGES)) {
+    for (const [to, count] of Object.entries(targets)) {
+      const key = [from, to].sort().join('|');
+      if (!merged.has(key)) merged.set(key, { a: [from, to].sort()[0], b: [from, to].sort()[1], ab: 0, ba: 0 });
+      const edge = merged.get(key);
+      if (from === edge.a) edge.ab += count;
+      else edge.ba += count;
+    }
+  }
+
+  const neighbors = {};
+  for (const edge of merged.values()) {
+    if (HUB_IDS.has(edge.a) || HUB_IDS.has(edge.b)) continue;
+    neighbors[edge.a] = (neighbors[edge.a] || 0) + 1;
+    neighbors[edge.b] = (neighbors[edge.b] || 0) + 1;
+  }
+
+  const edgeLayer = el('g', {}, svg);
+  const nodeLayer = el('g', {}, svg);
+  const edgeEls = [];
+
+  for (const edge of merged.values()) {
+    const p = pos[edge.a];
+    const q = pos[edge.b];
+    if (!p || !q) continue;
+    let d;
+    if (p.hub || q.hub) {
+      d = `M${p.x} ${p.y} L${q.x} ${q.y}`;
+    } else {
+      const mx = (p.x + q.x) / 2;
+      const my = (p.y + q.y) / 2;
+      const cx = mx + (center.x - mx) * 0.62;
+      const cy = my + (center.y - my) * 0.62;
+      d = `M${p.x} ${p.y} Q${cx} ${cy} ${q.x} ${q.y}`;
+    }
+    const total = edge.ab + edge.ba;
+    const width = 0.8 + Math.log2(total + 1) * 0.9;
+    const path = el('path', { d, class: 'g-edge', 'stroke-width': width.toFixed(2) }, edgeLayer);
+    edgeEls.push({ edge, path, hubEdge: HUB_IDS.has(edge.a) || HUB_IDS.has(edge.b) });
+  }
+
+  const nodeEls = {};
+  for (const [id, meta] of Object.entries(NODES)) {
+    const p = pos[id];
+    if (!p) continue;
+    const color = CLUSTERS[meta.cluster].color;
+    const g = el('g', { class: 'g-node', tabindex: 0, role: 'button', 'aria-label': meta.label || id }, nodeLayer);
+    const r = p.hub ? 17 : 6 + Math.min(9, (neighbors[id] || 0) * 0.75);
+    el('circle', { cx: p.x, cy: p.y, r, style: `fill:${color};stroke:var(--bg);stroke-width:2` }, g);
+    if (p.hub) {
+      text(g, p.x, p.y + (id === 'mvp' ? -26 : 34), meta.label, { anchor: 'middle', cls: 'g-hub-label' });
+    } else {
+      const lx = center.x + (radius + 16) * Math.cos(p.angle);
+      const ly = center.y + (radius + 16) * Math.sin(p.angle);
+      const cos = Math.cos(p.angle);
+      const sin = Math.sin(p.angle);
+      const anchor = cos > 0.2 ? 'start' : cos < -0.2 ? 'end' : 'middle';
+      const dy = sin < -0.8 ? -4 : sin > 0.8 ? 12 : 4;
+      text(g, lx, ly + dy, meta.label || id, { anchor, cls: 'g-label' });
+    }
+    g.addEventListener('click', (event) => { event.stopPropagation(); select(id); });
+    g.addEventListener('keydown', (event) => { if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); select(id); } });
+    nodeEls[id] = g;
+  }
+
+  svg.addEventListener('click', () => select(null));
+  toggle.addEventListener('change', () => render());
+
+  const legend = document.getElementById('cluster-legend');
+  for (const cluster of Object.values(CLUSTERS)) {
+    const span = document.createElement('span');
+    span.innerHTML = `<i class="sw" style="background:${cluster.color};border-radius:50%"></i>${cluster.label}`;
+    legend.appendChild(span);
+  }
+
+  let current = null;
+
+  /** Ustawia wybrany węzeł albo czyści wybór i odświeża rysunek oraz panel. */
+  function select(id) {
+    current = current === id ? null : id;
+    render();
+  }
+
+  /** Nakłada style krawędzi i węzłów zgodnie z wyborem oraz stanem przełącznika hubów. */
+  function render() {
+    const showHubs = toggle.checked;
+    for (const { edge, path, hubEdge } of edgeEls) {
+      const touches = current && (edge.a === current || edge.b === current);
+      const visible = touches || !hubEdge || showHubs;
+      let stroke = 'var(--c-slate)';
+      let opacity = visible ? (current ? 0.07 : 0.28) : 0;
+      if (touches) {
+        const other = edge.a === current ? edge.b : edge.a;
+        const out = edge.a === current ? edge.ab > 0 : edge.ba > 0;
+        const inc = edge.a === current ? edge.ba > 0 : edge.ab > 0;
+        stroke = out && inc ? 'var(--text)' : out ? 'var(--accent)' : 'var(--c-blue)';
+        opacity = 0.9;
+        if (HUB_IDS.has(other) && !showHubs && !HUB_IDS.has(current)) opacity = 0.35;
+      }
+      path.style.stroke = stroke;
+      path.style.strokeOpacity = String(opacity);
+    }
+    const related = new Set();
+    if (current) {
+      related.add(current);
+      Object.keys(EDGES[current] || {}).forEach((id) => related.add(id));
+      for (const [from, targets] of Object.entries(EDGES)) if (targets[current]) related.add(from);
+    }
+    for (const [id, g] of Object.entries(nodeEls)) {
+      g.style.opacity = current && !related.has(id) ? '0.25' : '1';
+    }
+    renderPanel();
+  }
+
+  /** Wypełnia panel boczny opisem wybranego węzła i listami odwołań w obie strony. */
+  function renderPanel() {
+    if (!current) {
+      panel.innerHTML = `<h3>Wybierz węzeł</h3><p class="hint">Kliknij standard, rejestr albo hub w środku. Panel pokaże, za co odpowiada, czego w nim nie ma, czym jest sprawdzany i z kim jest powiązany.</p>
+        <p class="hint">Warto zacząć od <b style="color:var(--text)">review</b> (odsyła do wszystkich 18 pozostałych), <b style="color:var(--text)">database</b> i <b style="color:var(--text)">time</b> (najmocniej oparte na MVP.md) albo <b style="color:var(--text)">agentic_workflow</b>.</p>`;
+      return;
+    }
+    const meta = NODES[current];
+    const cluster = CLUSTERS[meta.cluster];
+    const outgoing = Object.entries(EDGES[current] || {}).sort((x, y) => y[1] - x[1]);
+    const incoming = Object.entries(EDGES).filter(([, targets]) => targets[current]).map(([from, targets]) => [from, targets[current]]).sort((x, y) => y[1] - x[1]);
+    const chips = (list, cls) => list.length
+      ? `<div class="links">${list.map(([id, count]) => `<button class="${cls}" data-id="${id}">${NODES[id].label || id} (${count})</button>`).join('')}</div>`
+      : '<dd>brak</dd>';
+    panel.innerHTML = `
+      <span class="tag" style="background:${cluster.color}">${cluster.label}</span>
+      <h3>${meta.label || current}</h3>
+      <span class="file">${meta.file}</span>
+      <dl>
+        <dt>Status</dt><dd>${meta.status}</dd>
+        <dt>Odpowiada za</dt><dd>${meta.does}</dd>
+        <dt>Czego tu nie ma</dt><dd>${meta.not}</dd>
+        <dt>Weryfikacja</dt><dd>${meta.tool}</dd>
+        <dt>Odsyła do</dt>${chips(outgoing, 'out')}
+        <dt>Odsyłają do niego</dt>${chips(incoming, 'in')}
+      </dl>`;
+    panel.querySelectorAll('button[data-id]').forEach((button) => {
+      button.addEventListener('click', () => { current = null; select(button.dataset.id); });
+    });
+  }
+
+  render();
+}
+
+/** Rysuje pętlę zwrotną: od dziennika zadania przez rejestry do standardu i z powrotem do kolejnego zadania. */
+function drawLoop() {
+  const svg = document.getElementById('svg-loop');
+  const arrow = defineArrows(svg);
+  const box = (x, y, w, h, title, sub, color, tipText) => {
+    const g = el('g', {}, svg);
+    el('rect', { x, y, width: w, height: h, rx: 12, style: `fill:var(--surface-2);stroke:${color};stroke-width:1.6` }, g);
+    text(g, x + 14, y + 26, title, { style: 'font-size:14.5px;font-weight:600;fill:var(--text)' });
+    text(g, x + 14, y + 46, sub, { style: 'font-size:12px;fill:var(--text-dim)' });
+    if (tipText) tip(g, tipText);
+  };
+  const line = (d, tone, dashed) => el('path', { d, style: `fill:none;stroke:${TONE[tone]};stroke-width:1.6${dashed ? ';stroke-dasharray:5 4' : ''}`, 'marker-end': arrow(tone === 'orange' ? 'orange' : tone === 'mint' ? 'mint' : tone === 'accent' ? 'accent' : 'dim') }, svg);
+  const label = (x, y, content, tone, anchor) => text(svg, x, y, content, { anchor: anchor || 'middle', style: `font-size:11.5px;fill:${TONE[tone]}` });
+
+  box(17, 118, 190, 64, '_REVIEW.md', 'dziennik jednego zadania', TONE.pink, 'Co pominięto, na co agent trafił, jakie decyzje padły przy kodzie, co wymaga powrotu. Traci znaczenie po zamknięciu zadania.');
+  const diamond = el('g', {}, svg);
+  el('polygon', { points: '305,104 385,150 305,196 225,150', style: 'fill:var(--surface-2);stroke:var(--text-muted);stroke-width:1.4' }, diamond);
+  text(diamond, 305, 146, 'przekracza', { anchor: 'middle', style: 'font-size:12px;fill:var(--text)' });
+  text(diamond, 305, 161, 'zadanie?', { anchor: 'middle', style: 'font-size:12px;fill:var(--text)' });
+  box(440, 40, 270, 64, 'mapa: granice i długi', 'przeszłość: dług zastany, warunek powrotu', TONE.slate, 'Sekcja Granice nierozstrzygnięte i długi w docs/standards/README.md. Każdy wpis ma warunek powrotu.');
+  box(440, 196, 270, 64, 'decision_registry.md', 'przyszłość: wpływ, warianty, blokada, warunek', TONE.slate, 'Wpis znika z otwartych dopiero, gdy decyzja wyląduje tam, gdzie jej szukają. Sam wpis nigdy nie jest źródłem prawdy dla reguły.');
+  box(760, 196, 180, 64, 'decyzja zapada', 'pomiar, kontrakt, moment', TONE.accent, 'Odroczenie musi mieć powód: brak pomiaru, zależność od kontraktu z zewnątrz albo moment, który jeszcze nie nadszedł.');
+  box(990, 118, 233, 64, 'standard, MVP.md, kod', 'reguła tam, gdzie jej szukają', TONE.violet, 'Na przykład DEC-3 rozstrzygnięta 2026-08-13 weszła do standard_naming, standard_tests, standard_documentation i standard_agent_docs.');
+  box(17, 236, 190, 64, 'agent_docs/memory', 'trwały wzorzec modułu', TONE.mint, 'Append-only, plik per warstwa. Pisze plan-implement w kroku 7, tylko gdy coś przetrwa zakończenie zadania.');
+
+  line('M207 150 H223', 'dim');
+  line('M345 127 Q360 72 438 72', 'dim');
+  label(392, 70, 'już zastane', 'dim');
+  line('M345 173 Q360 228 438 228', 'dim');
+  label(400, 252, 'do podjęcia', 'dim');
+  line('M710 228 H758', 'dim');
+  line('M940 228 Q965 228 975 200 L990 172', 'dim');
+  line('M710 72 Q900 72 1060 116', 'orange', true);
+  label(890, 62, 'warunek powrotu spełniony -> nowa inicjatywa', 'orange');
+  line('M112 182 V234', 'mint');
+  label(120, 214, 'trwały wzorzec', 'mint', 'start');
+  label(305, 216, 'nie: zostaje w _REVIEW.md', 'dim');
+  line('M1106 118 V22 H112 V116', 'accent');
+  label(610, 16, 'następne zadanie: PLAN otwiera nową regułę, review ją egzekwuje, a memory podpowiada wzorzec', 'accent');
+}
+
+drawPipeline();
+drawCi();
+drawMatrix();
+drawGraph();
+drawLoop();
+</script>
+</body>
+</html>

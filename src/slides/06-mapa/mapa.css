@@ -1,0 +1,29 @@
+/* Blok 6: mapa obszarów projektu i stan pokrycia standardami. */
+
+.reveal svg .im-count {
+  font-family: var(--font-mono);
+  font-size: 36px;
+  fill: var(--text);
+}
+
+.reveal svg .im-legend-label {
+  font-size: 22px;
+  fill: var(--text-dim);
+}
+
+.reveal .im-pick {
+  fill: none;
+  stroke: var(--accent);
+  stroke-width: 3;
+}
+
+.reveal .im-badge circle {
+  fill: var(--accent);
+}
+
+.reveal svg .im-badge text {
+  font-family: var(--font-mono);
+  font-size: 20px;
+  font-weight: 600;
+  fill: var(--bg);
+}

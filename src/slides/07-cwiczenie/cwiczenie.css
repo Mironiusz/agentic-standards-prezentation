@@ -1,0 +1,131 @@
+/* Blok 7: ćwiczenie w zespołach i zamknięcie pętli. */
+
+.reveal .picks {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 26px;
+}
+
+.reveal .pick {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  min-height: 250px;
+  box-sizing: border-box;
+  padding: 26px 30px;
+  border: 1.5px solid var(--line);
+  border-radius: 16px;
+  background: var(--surface);
+}
+
+.reveal .pick-head {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  font-size: 36px;
+  font-weight: 500;
+}
+
+.reveal .pick-num {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  background: var(--accent);
+  font-family: var(--font-mono);
+  font-size: 24px;
+  font-weight: 600;
+  color: var(--bg);
+}
+
+.reveal .pick-label {
+  font-family: var(--font-mono);
+  font-size: 17px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-muted);
+}
+
+.reveal .pick-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.reveal .pick-tags .tag {
+  font-size: 20px;
+}
+
+.reveal .pick-extra {
+  margin-top: auto;
+  font-size: 24px;
+  color: var(--text-dim);
+}
+
+/* 7.2: szablon */
+
+.reveal svg .tp-note {
+  font-size: 29px;
+  fill: var(--text);
+}
+
+.reveal svg .tp-note.is-ready {
+  fill: var(--text-muted);
+}
+
+.reveal .tp-badge circle {
+  fill: var(--accent);
+}
+
+.reveal svg .tp-badge text {
+  font-family: var(--font-mono);
+  font-size: 20px;
+  font-weight: 600;
+  fill: var(--bg);
+}
+
+/* 7.3: zegar */
+
+.reveal svg .ck-total {
+  font-family: var(--font-mono);
+  font-size: 80px;
+  fill: var(--text);
+}
+
+.reveal svg .ck-min {
+  font-family: var(--font-mono);
+  font-size: 24px;
+  fill: var(--accent);
+}
+
+/* 7.4: wyniki */
+
+.reveal .wy-link {
+  stroke: var(--line-strong);
+  stroke-width: 2;
+  stroke-dasharray: 6 6;
+}
+
+.reveal .wy-slot circle {
+  fill: var(--bg);
+  stroke: var(--text-muted);
+  stroke-width: 1.5;
+}
+
+.reveal svg .wy-slot text {
+  font-family: var(--font-mono);
+  font-size: 17px;
+  fill: var(--text-muted);
+}
+
+.reveal .zm-lit {
+  fill: none;
+  stroke: var(--accent);
+  stroke-width: 3;
+}
+
+.reveal .zm-canvas {
+  top: 230px;
+}

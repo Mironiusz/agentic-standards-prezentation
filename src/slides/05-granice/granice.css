@@ -1,0 +1,362 @@
+/* Blok 5: odpowiedzialność standardów i to, co się dzieje, gdy reguła ma dwa adresy. */
+
+.reveal .gr-page {
+  fill: var(--surface);
+  stroke: var(--line-strong);
+  stroke-width: 1.5;
+}
+
+.reveal svg .gr-file {
+  font-family: var(--font-mono);
+  font-size: 21px;
+  fill: var(--text-dim);
+}
+
+.reveal svg .gr-rule {
+  font-family: var(--font-mono);
+  font-size: 26px;
+  fill: var(--c-orange);
+}
+
+.reveal svg .gr-rule.is-changed {
+  fill: var(--accent);
+}
+
+.reveal .gr-agent circle {
+  fill: var(--surface-2);
+  stroke: var(--text-dim);
+  stroke-width: 2;
+}
+
+.reveal svg .gr-agent text {
+  font-size: 26px;
+  fill: var(--text);
+}
+
+.reveal .gr-dash {
+  fill: none;
+  stroke: var(--line-strong);
+  stroke-width: 2;
+  stroke-dasharray: 6 6;
+}
+
+.reveal .gr-ref {
+  fill: none;
+  stroke: var(--c-orange);
+  stroke-width: 2;
+}
+
+.reveal .gr-ref.is-mint {
+  stroke: var(--c-mint);
+}
+
+.reveal .gr-dot {
+  fill: var(--c-orange);
+}
+
+.reveal svg .gr-head {
+  font-family: var(--font-mono);
+  font-size: 22px;
+  letter-spacing: 0.04em;
+  fill: var(--text-muted);
+}
+
+.reveal svg .gr-caption {
+  font-family: var(--font-mono);
+  font-size: 19px;
+  fill: var(--c-mint);
+}
+
+.reveal .gr-outcomes {
+  display: flex;
+  justify-content: center;
+  gap: 24px;
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 470px;
+}
+
+.reveal .gr-outcomes .tag {
+  font-family: var(--font-sans);
+  font-size: 28px;
+  padding: 10px 24px;
+}
+
+/* 5.3: dwie karty z granicą */
+
+.reveal .bound-cards {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 32px;
+}
+
+.reveal .bound-cards .fc-body {
+  font-size: 24px;
+  line-height: 1.45;
+}
+
+.reveal .bound-cards ul {
+  margin: 0;
+  padding-left: 26px;
+}
+
+.reveal .bound-cards li {
+  margin-bottom: 14px;
+}
+
+/* 5.4: mapa i dwie drabiny */
+
+.reveal .mh-grid {
+  display: grid;
+  grid-template-columns: 760px 1fr;
+  gap: 50px;
+  align-items: start;
+}
+
+.reveal .mh-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 22px;
+}
+
+.reveal .mh-table td {
+  padding: 10px 8px;
+  border-bottom: 1px solid var(--line);
+  vertical-align: top;
+}
+
+.reveal .mh-table td:last-child {
+  font-family: var(--font-mono);
+  font-size: 19px;
+  color: var(--c-orange);
+}
+
+.reveal .ladders {
+  display: grid;
+  grid-template-columns: 220px 1fr;
+  gap: 30px;
+}
+
+.reveal .ladder {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.reveal .ladder-head {
+  margin-bottom: 6px;
+  font-family: var(--font-mono);
+  font-size: 18px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-muted);
+}
+
+.reveal .ladder .tag {
+  align-self: flex-start;
+  font-size: 20px;
+}
+
+.reveal .ladder-gt {
+  padding-left: 18px;
+  font-family: var(--font-mono);
+  font-size: 18px;
+  color: var(--text-muted);
+}
+
+.reveal .mh-signal {
+  margin-top: 34px;
+}
+
+.reveal .mh-signal .tag {
+  font-size: 22px;
+}
+
+/* 5.5: graf */
+
+.reveal .gr-edge {
+  stroke: var(--line-strong);
+  stroke-linecap: round;
+  opacity: 0.55;
+}
+
+.reveal .gr-edge.is-on {
+  stroke: var(--accent);
+  opacity: 1;
+}
+
+.reveal .gr-mvp rect {
+  fill: var(--surface-2);
+  stroke: var(--text-dim);
+  stroke-width: 1.5;
+}
+
+.reveal svg .gr-mvp text {
+  font-family: var(--font-mono);
+  font-size: 22px;
+  fill: var(--text);
+}
+
+.reveal .gr-focus {
+  fill: none;
+  stroke: var(--accent);
+  stroke-width: 3;
+}
+
+/* 5.6 i 5.7: przypadki */
+
+.reveal .cases {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+}
+
+.reveal .case {
+  display: grid;
+  grid-template-columns: 260px 1fr;
+  gap: 26px;
+  align-items: center;
+  padding: 22px 28px;
+  border: 1.5px solid var(--line);
+  border-radius: 14px;
+  background: var(--surface);
+}
+
+.reveal .case-label {
+  font-size: 26px;
+  line-height: 1.25;
+  color: var(--text-dim);
+}
+
+.reveal .case-flow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+}
+
+.reveal .case-flow .tag {
+  font-size: 21px;
+}
+
+.reveal .case-sep {
+  font-size: 26px;
+  color: var(--text-muted);
+}
+
+.reveal .case-big {
+  font-family: var(--font-mono);
+  font-size: 40px;
+  color: var(--c-alert);
+}
+
+.reveal .auto-cards {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 28px;
+}
+
+.reveal .auto-cards .fc-body {
+  font-family: var(--font-mono);
+  font-size: 19px;
+  line-height: 1.6;
+  white-space: nowrap;
+}
+
+.reveal .auto-cards .ln {
+  display: inline-block;
+  width: 44px;
+  color: var(--text-muted);
+}
+
+.reveal .auto-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-top: 30px;
+}
+
+.reveal .auto-row .tag {
+  font-size: 22px;
+}
+
+.reveal .auto-row .muted {
+  font-size: 24px;
+  color: var(--text-muted);
+}
+
+/* 5.8: lista */
+
+.reveal .check-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.reveal .check-list li {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  font-size: 32px;
+}
+
+.reveal .check-num {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  width: 52px;
+  height: 52px;
+  border: 2px solid var(--c-orange);
+  border-radius: 50%;
+  font-family: var(--font-mono);
+  font-size: 24px;
+  color: var(--c-orange);
+}
+
+/* 5.9: Kahoot */
+
+.reveal .kahoot {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 30px;
+  padding-top: 90px;
+  text-align: center;
+}
+
+.reveal .kahoot-title {
+  margin: 0;
+  font-size: 120px;
+  font-weight: 600;
+  line-height: 1;
+}
+
+.reveal .kahoot-sub {
+  margin: 0;
+  font-size: 44px;
+  color: var(--text-dim);
+}
+
+.reveal .kahoot-meta {
+  display: flex;
+  gap: 20px;
+}
+
+.reveal .kahoot-meta .tag {
+  font-size: 24px;
+}
+
+.reveal .kahoot-pin {
+  margin-top: 30px;
+  padding: 20px 60px;
+  border: 2px dashed var(--line-strong);
+  border-radius: 16px;
+  font-family: var(--font-mono);
+  font-size: 34px;
+  color: var(--text-muted);
+}

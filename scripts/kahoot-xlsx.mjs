@@ -25,9 +25,12 @@ const TIMES = [5, 10, 20, 30, 60, 90, 120, 240];
 /** Pierwszy wiersz z pytaniem: wiersze 1-8 szablonu to instrukcja i nagłówek tabeli. */
 const FIRST_ROW = 9;
 
-/** Czyta bank pytań. Blok zaczyna się od "## P<n>", a kolejność pól jest sztywna. Format opisuje docs/kahoot.md. */
+/**
+ * Czyta bank pytań. Blok zaczyna się od "## P<n>" i kończy na następnym nagłówku "## ", a kolejność pól
+ * jest sztywna. Sekcje z innym nagłówkiem (np. pytania zapasowe) nie trafiają do quizu. Format opisuje docs/kahoot.md.
+ */
 function parseQuestions(markdown) {
-  const blocks = markdown.split(/^## (?=P\d+)/m).slice(1);
+  const blocks = markdown.split(/^## /m).filter((block) => /^P\d+/.test(block));
   if (!blocks.length) throw new Error('docs/kahoot.md: nie znalazłem żadnego bloku "## P<numer>"');
 
   return blocks.map((block) => {
@@ -36,16 +39,16 @@ function parseQuestions(markdown) {
       throw new Error(`docs/kahoot.md, ${id}: ${message}`);
     };
 
-    const question = block.match(/^\*\*Pytanie:\*\* (.+)$/m)?.[1]?.trim();
-    if (!question) fail('brak wiersza "**Pytanie:** ..."');
+    const question = block.match(/^Pytanie: (.+)$/m)?.[1]?.trim();
+    if (!question) fail('brak wiersza "Pytanie: ..."');
 
     const answers = [...block.matchAll(/^(\d)\. (.+)$/gm)].map((m) => m[2].trim());
     if (answers.length < 2 || answers.length > 4) {
       fail(`odpowiedzi musi być od 2 do 4, jest ${answers.length}`);
     }
 
-    const meta = block.match(/^\*\*Poprawna:\*\* ([\d, ]+) · \*\*Czas:\*\* (\d+)$/m);
-    if (!meta) fail('brak wiersza "**Poprawna:** ... · **Czas:** ..."');
+    const meta = block.match(/^Poprawna: ([\d, ]+) - Czas: (\d+)$/m);
+    if (!meta) fail('brak wiersza "Poprawna: ... - Czas: ..."');
 
     const correct = meta[1].split(',').map((n) => Number(n.trim()));
     for (const index of correct) {

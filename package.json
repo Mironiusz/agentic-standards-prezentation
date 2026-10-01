@@ -1,8 +1,8 @@
 {
-  "name": "prezentacja",
+  "name": "standardy-agentowe",
   "version": "0.1.0",
   "private": true,
-  "description": "Prezentacja w przeglądarce: reveal.js, animacje GSAP, jeden plik HTML offline",
+  "description": "Prezentacja o standardach agentowych w quantasku: reveal.js, animacje GSAP, jeden plik HTML offline",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -10,7 +10,10 @@
     "preview": "vite preview",
     "snapshots": "node scripts/snapshots.mjs",
     "pdf": "node scripts/pdf.mjs",
-    "kahoot": "node scripts/kahoot-xlsx.mjs"
+    "kahoot": "node scripts/kahoot-xlsx.mjs",
+    "cwiczenie": "node scripts/cwiczenie.mjs",
+    "format": "prettier --write .",
+    "lint": "prettier --check . && node scripts/style-check.mjs"
   },
   "dependencies": {
     "@fontsource/ibm-plex-mono": "^5.3.0",
@@ -21,6 +24,7 @@
   },
   "devDependencies": {
     "playwright": "^1.63.0",
+    "prettier": "3.9.9",
     "vite": "^8.3.0",
     "vite-plugin-singlefile": "^2.3.3"
   }

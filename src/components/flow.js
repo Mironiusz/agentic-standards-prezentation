@@ -20,16 +20,14 @@ function renderNode(node, i) {
 }
 
 /** Strzałka w dół od `y1` do `y2` (grot kończy się dokładnie na `y2`). */
-export const vArrow = (x, y1, y2, cls = '') =>
-  `<g class="fl-arrow ${cls}"><path class="fl-link" d="M${x} ${y1} V${y2 - 11}" /><path class="fl-head" d="M${x} ${y2} l-7 -12 h14 z" /></g>`;
+export const vArrow = (x, y1, y2, cls = '') => `<g class="fl-arrow ${cls}"><path class="fl-link" d="M${x} ${y1} V${y2 - 11}" /><path class="fl-head" d="M${x} ${y2} l-7 -12 h14 z" /></g>`;
 
 /** Strzałka w górę: od `yBottom` do `yTop` (grot na górze). */
 export const vArrowUp = (x, yBottom, yTop, cls = '') =>
   `<g class="fl-arrow ${cls}"><path class="fl-link" d="M${x} ${yBottom} V${yTop + 11}" /><path class="fl-head" d="M${x} ${yTop} l-7 12 h14 z" /></g>`;
 
 /** Strzałka w prawo od `x1` do `x2`. */
-export const hArrow = (x1, x2, y, cls = '') =>
-  `<g class="fl-arrow ${cls}"><path class="fl-link" d="M${x1} ${y} H${x2 - 11}" /><path class="fl-head" d="M${x2} ${y} l-12 -7 v14 z" /></g>`;
+export const hArrow = (x1, x2, y, cls = '') => `<g class="fl-arrow ${cls}"><path class="fl-link" d="M${x1} ${y} H${x2 - 11}" /><path class="fl-head" d="M${x2} ${y} l-12 -7 v14 z" /></g>`;
 
 function place(nodes, step, geom) {
   return nodes.map((node, i) => {
@@ -42,27 +40,31 @@ function place(nodes, step, geom) {
 /** Kolumna pudełek wyśrodkowana na `cx`, od `top` w dół. */
 export function flowColumn(nodes, { cx = 0, top = 0, w = FLOW.w, h = FLOW.h, gap = FLOW.gap } = {}) {
   let y = top;
-  const boxes = place(nodes, (i, bw, bh) => {
-    const box = { x: cx - bw / 2, y, cx, cy: y + bh / 2 };
-    y += bh + gap;
-    return box;
-  }, { w, h });
-  const svg = boxes
-    .map((b, i) => (i > 0 ? vArrow(cx, boxes[i - 1].y + boxes[i - 1].h + 6, b.y - 4) : '') + renderNode(b, i))
-    .join('');
+  const boxes = place(
+    nodes,
+    (i, bw, bh) => {
+      const box = { x: cx - bw / 2, y, cx, cy: y + bh / 2 };
+      y += bh + gap;
+      return box;
+    },
+    { w, h },
+  );
+  const svg = boxes.map((b, i) => (i > 0 ? vArrow(cx, boxes[i - 1].y + boxes[i - 1].h + 6, b.y - 4) : '') + renderNode(b, i)).join('');
   return { svg, boxes, bottom: y - gap };
 }
 
 /** Rząd pudełek na wysokości `cy`, od `left` w prawo. */
 export function flowRow(nodes, { left = 0, cy = 0, w = FLOW.w, h = FLOW.h, gap = FLOW.gap } = {}) {
   let x = left;
-  const boxes = place(nodes, (i, bw, bh) => {
-    const box = { x, y: cy - bh / 2, cx: x + bw / 2, cy };
-    x += bw + gap;
-    return box;
-  }, { w, h });
-  const svg = boxes
-    .map((b, i) => (i > 0 ? hArrow(boxes[i - 1].x + boxes[i - 1].w + 6, b.x - 4, cy) : '') + renderNode(b, i))
-    .join('');
+  const boxes = place(
+    nodes,
+    (i, bw, bh) => {
+      const box = { x, y: cy - bh / 2, cx: x + bw / 2, cy };
+      x += bw + gap;
+      return box;
+    },
+    { w, h },
+  );
+  const svg = boxes.map((b, i) => (i > 0 ? hArrow(boxes[i - 1].x + boxes[i - 1].w + 6, b.x - 4, cy) : '') + renderNode(b, i)).join('');
   return { svg, boxes, right: x - gap };
 }

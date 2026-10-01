@@ -1,0 +1,153 @@
+/* Blok 3: szkielet standardu, rodzaje treści i klastry. */
+
+.reveal svg .sz-note {
+  font-size: 30px;
+  fill: var(--text);
+}
+
+.reveal .sz-link {
+  stroke: var(--accent);
+  stroke-width: 2;
+}
+
+/* 3.2: pytania, na które odpowiada standard */
+
+.reveal .qa-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-auto-rows: 296px;
+  gap: 26px;
+}
+
+.reveal .qa-card {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  box-sizing: border-box;
+  padding: 26px 30px;
+  border: 1.5px solid var(--line);
+  border-radius: 16px;
+  background: var(--surface);
+}
+
+/* Podpis źródła opływany przez pytanie: zabiera miejsce tylko w pierwszej linii, a nie w całej kolumnie. */
+
+.reveal .qa-src {
+  float: right;
+  margin: -8px -8px 0 16px;
+  font-family: var(--font-mono);
+  font-size: 17px;
+  font-weight: 400;
+  color: var(--text-muted);
+}
+
+.reveal .qa-question {
+  font-size: 31px;
+  font-weight: 500;
+  line-height: 1.2;
+}
+
+.reveal .qa-answer {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 12px;
+  flex: 1;
+}
+
+.reveal .qa-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.reveal .qa-row .tag,
+.reveal .qa-table .tag {
+  justify-self: start;
+  font-size: 21px;
+}
+
+/* Kilka wierszy "to -> tamto" w jednej karcie: trzy kolumny, żeby strzałki stały jedna pod drugą. */
+
+.reveal .qa-table {
+  display: grid;
+  grid-template-columns: max-content max-content max-content;
+  align-items: center;
+  gap: 10px 14px;
+}
+
+.reveal .qa-arrow {
+  font-size: 26px;
+  color: var(--text-muted);
+}
+
+.reveal .qa-key {
+  font-size: 22px;
+  color: var(--text-dim);
+}
+
+.reveal .qa-ask {
+  font-size: 24px;
+  color: var(--text);
+}
+
+.reveal .qa-big {
+  font-family: var(--font-mono);
+  font-size: 64px;
+  line-height: 1;
+}
+
+.reveal .qa-big .qa-arrow {
+  font-size: 44px;
+}
+
+.reveal .qa-old {
+  color: var(--text-muted);
+  text-decoration: line-through;
+  text-decoration-color: var(--c-alert);
+  text-decoration-thickness: 4px;
+}
+
+.reveal .qa-new {
+  color: var(--c-orange);
+}
+
+/* Znaki w foncie bezszeryfowym: w mono długi myślnik i wielokropek wyglądają prawie jak zwykły minus i trzy kropki. */
+
+.reveal .qa-glyphs {
+  gap: 4px 22px;
+  font-family: var(--font-sans);
+  font-size: 42px;
+  line-height: 1.1;
+}
+
+.reveal .qa-glyphs .qa-bad,
+.reveal .qa-glyphs .qa-good {
+  min-width: 70px;
+  text-align: center;
+}
+
+.reveal .qa-bad {
+  color: var(--c-alert);
+}
+
+.reveal .qa-good {
+  color: var(--text);
+}
+
+.reveal .qa-cap {
+  font-size: 22px;
+  color: var(--text-dim);
+}
+
+.reveal .qa-cap.is-violet {
+  color: var(--c-violet);
+}
+
+.reveal .qa-quote {
+  padding-left: 18px;
+  border-left: 3px solid var(--line-strong);
+  font-size: 25px;
+  line-height: 1.35;
+  color: var(--text);
+}

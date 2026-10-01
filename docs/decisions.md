@@ -8,7 +8,7 @@ numeracją (tabela w D-013). Decyzje o treści tamtej prezentacji zostały usuni
 
 ## D-001: Prezentacja w przeglądarce (reveal.js), nie PowerPoint
 
-2026-09-16 · przyjęta
+2026-09-16 - przyjęta
 
 Narzędzia do generowania `.pptx` praktycznie nie obsługują animacji, a to one są rdzeniem
 prezentacji (strzałki przesuwające się w przestrzeni, diagramy budowane krok po kroku). reveal.js
@@ -16,7 +16,7 @@ daje nawigację pilotem, widok prezentera z notatkami, przegląd slajdów i eksp
 
 ## D-002: Animacje jako osie czasu GSAP sterowane krokami reveal.js
 
-2026-09-16 · przyjęta
+2026-09-16 - przyjęta
 
 Każdy animowany slajd ma jedną oś czasu GSAP podzieloną etykietami na kroki. Kroki to niewidoczne
 fragmenty reveal.js, więc pilot i klawiatura działają bez żadnej dodatkowej obsługi.
@@ -29,7 +29,7 @@ Można do niego wrócić przy pojedynczej scenie, jeśli GSAP nie wystarczy.
 
 ## D-003: Jeden plik offline (Vite + vite-plugin-singlefile)
 
-2026-09-16 · przyjęta
+2026-09-16 - przyjęta
 
 Na sali może nie być internetu. Build daje `dist/index.html` z wbudowanymi skryptami, stylami
 i fontami (`@fontsource`, bez Google Fonts). Plik działa otwarty z dysku (`file://`), co sprawdza
@@ -37,7 +37,7 @@ i fontami (`@fontsource`, bez Google Fonts). Plik działa otwarty z dysku (`file
 
 ## D-004: Ciemny motyw w duchu 3Blue1Brown i paleta sprawdzona pod kątem daltonizmu
 
-2026-09-16 · przyjęta
+2026-09-16 - przyjęta
 
 Ciemny motyw. Kolory mają w prezentacji stałe znaczenie, które opisuje tabela w `docs/conventions.md`.
 Trzy kolory przeznaczone do stawiania obok siebie sprawdzono walidatorem pod kątem daltonizmu.
@@ -54,7 +54,7 @@ na docelowym sprzęcie (`docs/pokaz.md`).
 
 ## D-005: Geometria slajdów bez pomiarów DOM
 
-2026-09-16 · przyjęta
+2026-09-16 - przyjęta
 
 reveal.js ukrywa nieaktywne slajdy (`display: none`), więc pomiary rozmiarów przy budowaniu
 zwracałyby zera. Współrzędne w SVG są stałe albo liczone z metryki fontu monospace
@@ -63,7 +63,7 @@ analitycznie (np. próbkowanie krzywej Béziera), a nie przez `getTotalLength()`
 
 ## D-006: Symbole spoza fontu rysujemy w SVG
 
-2026-09-17 · przyjęta
+2026-09-17 - przyjęta
 
 Podzbiory IBM Plex z `@fontsource` nie zawierają strzałek, znaku "w przybliżeniu", pierwiastka
 ani kropek pionowych. Przeglądarka dobrałaby je z fontu systemowego, więc na komputerze na sali
@@ -72,7 +72,7 @@ w `src/components/icons.js`, a wzory składa KaTeX z własnymi fontami (D-008).
 
 ## D-007: Wspólna przestrzeń 3D z własnym rzutowaniem zamiast biblioteki
 
-2026-09-17 · przyjęta
+2026-09-17 - przyjęta
 
 Strzałki i punkty w przestrzeni potrzebują lekkiego kołysania kamery i pełnej kontroli nad stylem.
 Three.js to ciężka zależność, rysuje w canvas (gorzej z ostrością tekstu i PDF) i nie pasuje do stylu
@@ -80,7 +80,7 @@ SVG reszty slajdów. `src/components/space3d.js` to rzut perspektywiczny w ok. 1
 
 ## D-008: KaTeX do wzorów
 
-2026-09-17 · przyjęta
+2026-09-17 - przyjęta
 
 Wzory składa KaTeX w czasie budowania modułu (`src/lib/math.js`). Ma własne fonty,
 więc pierwiastki, indeksy i strzałki wektorów wyglądają wszędzie tak samo (D-006). Fragment wzoru można
@@ -93,7 +93,7 @@ importuje `src/lib/math.js`.
 
 ## D-009: Wspólne komponenty diagramów
 
-2026-09-17 · przyjęta
+2026-09-17 - przyjęta
 
 Zamiast rysować diagramy przepływu za każdym razem od nowa, są dwa moduły wspólne:
 
@@ -105,7 +105,7 @@ Zamiast rysować diagramy przepływu za każdym razem od nowa, są dwa moduły w
 
 ## D-010: Plan czasu, próba i zapasowe PDF-y
 
-2026-09-17 · przyjęta
+2026-09-17 - przyjęta
 
 - Plan czasu leży w jednym pliku `src/slides/timing.js` (sekundy na slajd, po id), a nie w modułach
   slajdów. Po próbie poprawia się go w jednym miejscu. `main.js` przekazuje czasy do reveal.js
@@ -124,7 +124,7 @@ Zamiast rysować diagramy przepływu za każdym razem od nowa, są dwa moduły w
 
 ## D-011: Quiz Kahoot powstaje z pliku w repozytorium
 
-2026-09-17 · przyjęta
+2026-09-17 - przyjęta
 
 - Bank pytań jest w `docs/kahoot.md` i to on jest źródłem prawdy: treść pytań, odpowiedzi, poprawne
   numery, czas i komentarz dla prelegenta. Poprawki robi się tam, a nie w edytorze Kahoota, bo edytor
@@ -140,7 +140,7 @@ Zamiast rysować diagramy przepływu za każdym razem od nowa, są dwa moduły w
 
 ## D-012: Lżejszy plik do wysłania i mapa w rogu bez przycięcia
 
-2026-09-18 · przyjęta
+2026-09-18 - przyjęta
 
 - Mapa etapów w rogu miała skrajne prostokąty dokładnie na krawędziach `viewBox`, a ich obrys ma 1,5 px,
   więc połowa obrysu wypadała poza rysunek i była ucinana. Mapa ma 2 px marginesu w `viewBox`
@@ -157,7 +157,7 @@ Zamiast rysować diagramy przepływu za każdym razem od nowa, są dwa moduły w
 
 ## D-013: Silnik wydzielony z prezentacji "Wnętrze transformera"
 
-2026-09-26 · przyjęta
+2026-09-26 - przyjęta
 
 Repozytorium zawierało prezentację "Wnętrze transformera" (slajdy o transformerze i o RAG). Zostaje
 z niego sam silnik, na którym powstanie nowa prezentacja.
@@ -193,3 +193,79 @@ Numeracja decyzji silnika w tamtej prezentacji i tutaj (do czytania starej histo
 | D-034 | D-010 |
 | D-035 | D-011 |
 | D-036 | D-012 |
+
+## D-014: Zapowiedź następnego slajdu w notatkach
+
+2026-10-01 - przyjęta
+
+Notatki prezentera kończą się linijką "Dalej: ...", która mówi, o czym jest następny slajd. Widok prezentera
+pokazuje miniaturę następnego slajdu, ale nie mówi, do czego prowadzi przejście, a tego prelegent potrzebuje
+w trakcie mówienia.
+
+Zapowiedź mieszka w module slajdu, którego dotyczy (pole `summary`), a nie w notatkach slajdu poprzedniego.
+`main.js` dokleja ją do notatek poprzednika. Dzięki temu zmiana kolejności slajdów w `index.js` sama poprawia
+zapowiedzi i ten sam opis slajdu nie stoi w dwóch miejscach. `npm run snapshots` zgłasza slajd bez `summary`
+jako błąd, tak jak slajd bez czasu.
+
+## D-015: Warianty slajdu wybierane cyfrą
+
+2026-10-01 - przyjęta
+
+Plansza wyników ćwiczenia (`wyniki`) musi pokazać obszar, który sala wybierze w głosowaniu dopiero na żywo.
+Slajd ma więc cztery plansze jako warianty (`[data-variant]`), a cyfra wciśnięta na tym slajdzie przełącza
+na wariant o tym numerze (`src/lib/variants.js`). Numer wariantu to numer kandydata z głosowania, bo obie
+listy biorą się z jednego modułu `src/components/candidates.js`.
+
+- Wybór nie jest krokiem animacji. Kroki to kliknięcia pilota i idą zawsze do przodu, a wybór planszy może
+  paść na dowolny numer w dowolnej kolejności.
+- Widok prezentera przekazuje klawisze do własnej kopii prezentacji, a do głównego okna synchronizuje tylko
+  numer slajdu i kroku. Wybór idzie więc dodatkowo przez `localStorage`, którego zdarzenie `storage` dociera
+  do pozostałych okien, w tym do projektora. Sprawdzone skryptem Playwright na buildzie z `file://`.
+- Po przeładowaniu strony slajd wraca do wariantu 1. Wybór z próby nie przechodzi na prezentację.
+- Zrzuty i PDF-y pokazują wariant 1.
+
+## D-016: Treść prezentacji w wersji docelowej
+
+2026-10-01 - przyjęta
+
+Slajdy startowe silnika (D-013) zastąpiła prezentacja o standardach agentowych w quantasku: 41 slajdów
+w ośmiu blokach według `SEED.md`. Plan powstał w `PLAN.md` (prelegent) i `PLAN_SLAJDY.md` (rozpisanie
+slajd po slajdzie). Oba pliki zostają jako materiał roboczy, a źródłem prawdy o treści jest `SEED.md`.
+
+- Kolory mają stałe znaczenia z tabeli w `docs/conventions.md`.
+- Grupy standardów na slajdzie `klastry` i pierwsze cztery pasy mapy obszarów mają te same nazwy (jedna
+  lista w `src/components/standards.js`). Piąty pas, wdrożenie i utrzymanie, jest tylko na mapie, bo tam
+  leży większość braków.
+- Kandydaci do ćwiczenia (config, potok CI, kontenery i lokalne środowisko, wydajność) są w jednym module
+  `src/components/candidates.js`, z którego korzystają mapa kandydatów, głosowanie, plansza wyników
+  i skrypt materiałów `npm run cwiczenie`.
+- Bank pytań Kahoota ma 10 pytań i 3 zapasowe. Parser kończy blok pytania na następnym nagłówku `## `,
+  więc sekcja zapasowych nie trafia do quizu.
+- Nazwa w `package.json` to `standardy-agentowe`, więc PDF-y nazywają się `standardy-agentowe-*.pdf`.
+
+## D-017: Standardy formatowania i jakości kodu z quantaska
+
+2026-10-01 - przyjęta
+
+Repozytorium stosuje `standard_formatting.md` i `standard_code_quality.md` z quantaska. Narzędzia z tych
+standardów są pythonowe (ruff, mypy, vulture, deptry), więc tutaj stosujemy ich reguły, a narzędzia
+dobieramy do JavaScriptu:
+
+- Prettier (przypięta dokładna wersja w `devDependencies`) formatuje markdown, JavaScript i CSS z konfiguracją
+  quantaska (`printWidth` 200, `proseWrap: preserve`, LF, wcięcie 2) i pojedynczymi cudzysłowami w JS,
+  bo tak był pisany cały kod. `.gitattributes` wymusza LF, żeby git na Windowsie nie zamieniał końców linii.
+  Poza formatowaniem zostają pliki wynikowe, `STANDARDY.html` (materiał źródłowy) i generowane
+  `materialy/cwiczenie/granice_*.md` (dosłowne kopie sekcji ze standardów).
+- `scripts/style-check.mjs` pilnuje tego, czego prettier nie załatwi: znaków zakazanych, emotikonów, pogrubień
+  w prozie markdownu i komentarzy linijkowych w JS. Oba sprawdzenia uruchamia `npm run lint`.
+- Kropka środkowa jest na liście znaków zakazanych, więc wszystkie separatory na slajdach, w notatkach
+  i w dokumentacji są teraz zwykłym myślnikiem, dwukropkiem albo przecinkiem. Format bloku w `docs/kahoot.md`
+  stracił pogrubione etykiety i kropkę: `Pytanie: ...` i `Poprawna: 2 - Czas: 20`.
+- `SEED.md` ma nagłówek na slajd zamiast pogrubionej etykiety na początku akapitu.
+- Martwy kod: z modułów tej prezentacji usunięte nieużywane `CI_JOBS`, a stałe używane tylko wewnątrz modułu
+  przestały być eksportowane. Części silnika, których ta prezentacja nie używa (`space3d.js`, `token-chips.js`,
+  `math.js` z zależnością `katex`, `svg-text.js`, `visibility.js` i nieużywane eksporty `flow.js` i `icons.js`),
+  zostają świadomie jako silnik do kolejnych prezentacji. `decimal()` z `math.js` stawia typograficzny minus,
+  który standard zakazuje, więc przed użyciem trzeba ją przestawić na zwykły `-`.
+- Złożoności funkcji nie mierzy żadne narzędzie. Funkcje w tym repozytorium są krótkie, a próg 15 z
+  `standard_code_quality.md` sprawdza review.

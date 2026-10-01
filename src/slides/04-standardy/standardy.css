@@ -1,0 +1,138 @@
+/* Blok 4: trzy standardy z bliska, bez rysunków: fragmenty plików, reguły i łańcuchy egzekwowania. */
+
+.reveal .std-title {
+  margin-top: 8px;
+  font-family: var(--font-mono);
+  font-weight: 500;
+}
+
+.reveal .std-cards {
+  display: grid;
+  gap: 32px;
+  top: 200px;
+}
+
+.reveal .std-cards.is-1 {
+  grid-template-columns: minmax(0, 1200px);
+}
+
+.reveal .std-cards.is-2 {
+  grid-template-columns: 1fr 1fr;
+}
+
+.reveal .std-cards .fc-body {
+  font-size: 30px;
+}
+
+.reveal .rule-list,
+.reveal .guard-list {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+  top: 200px;
+}
+
+.reveal .rule-row {
+  display: grid;
+  grid-template-columns: 210px 1fr 520px;
+  gap: 28px;
+  align-items: center;
+  padding: 20px 26px;
+  border: 1.5px solid var(--line);
+  border-radius: 14px;
+  background: var(--surface);
+}
+
+.reveal .rule-row > .tag,
+.reveal .guard-row > .tag {
+  justify-self: start;
+}
+
+.reveal .rule-text {
+  font-size: 30px;
+  line-height: 1.3;
+}
+
+.reveal .rule-demo {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.reveal .rule-demo .tag {
+  font-size: 20px;
+}
+
+.reveal .rule-breaks {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 25px;
+  line-height: 1.3;
+  color: var(--c-alert);
+}
+
+.reveal .rule-breaks-label {
+  font-family: var(--font-mono);
+  font-size: 17px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-muted);
+}
+
+.reveal .guard-row {
+  display: grid;
+  grid-template-columns: 210px 560px 1fr;
+  gap: 28px;
+  align-items: center;
+  padding: 18px 26px;
+  border: 1.5px solid var(--line);
+  border-radius: 14px;
+  background: var(--surface);
+}
+
+.reveal .guard-rule {
+  font-size: 27px;
+  line-height: 1.3;
+}
+
+.reveal .guard-chain {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+}
+
+.reveal .guard-chain .tag {
+  font-size: 20px;
+}
+
+.reveal .guard-arrow {
+  font-size: 26px;
+  color: var(--text-muted);
+}
+
+.reveal .guard-note {
+  max-width: 900px;
+  margin-top: 12px;
+}
+
+.reveal .guard-note .fc-body {
+  font-size: 27px;
+}
+
+.reveal .rule-list.is-single .rule-row {
+  grid-template-columns: 1fr 560px;
+}
+
+.reveal .guard-list.is-single .guard-row {
+  grid-template-columns: 560px 1fr;
+}
+
+.reveal .guard-group {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  white-space: nowrap;
+}

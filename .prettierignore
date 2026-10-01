@@ -1,0 +1,6 @@
+dist/
+snapshots/
+out/
+package-lock.json
+STANDARDY.html
+materialy/cwiczenie/granice_*.md

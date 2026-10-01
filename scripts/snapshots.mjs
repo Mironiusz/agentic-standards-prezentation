@@ -26,6 +26,7 @@ const { slides, totalTime } = await page.evaluate(() => window.__deck);
 for (const slide of slides) {
   if (slide.clicks !== slide.steps) errors.push(`${slide.id}: ${slide.clicks} x [klik] w notatkach, a kroków animacji ${slide.steps}`);
   if (!slide.timing) errors.push(`${slide.id}: brak czasu w src/slides/timing.js`);
+  if (!slide.summary) errors.push(`${slide.id}: brak pola summary (zapowiedź w notatkach poprzedniego slajdu)`);
 }
 console.log(`Plan czasu: ${Math.round(totalTime / 60)} min`);
 let count = 0;

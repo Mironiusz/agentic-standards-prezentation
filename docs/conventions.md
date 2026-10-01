@@ -4,20 +4,22 @@
 
 Jeden plik na slajd w `src/slides/NN-blok/sNN-nazwa.js`, dopisany do listy w `src/slides/index.js`,
 z czasem w sekundach w `src/slides/timing.js` (D-010). Style bloku leżą obok, w `src/slides/NN-blok/blok.css`,
-importowane z modułu slajdu. Wzór: `src/slides/01-start/s02-przyklad.js`.
+importowane z modułu slajdu. Wzór: `src/slides/01-workflow/s02-bramki.js`.
 
-| Pole               | Wymagane | Znaczenie                                                                           |
-| ------------------ | -------- | ----------------------------------------------------------------------------------- |
-| `id`               | tak      | unikalne, trafia do URL, do nazw zrzutów i jako klucz do `timing.js`                |
-| `html`             | tak      | treść slajdu, bez znacznika `<section>`                                             |
-| `notes`            | nie      | notatki prezentera (klawisz S), kliknięcia oznaczone `[klik]`                        |
-| `stage`            | nie      | klucz etapu z `src/slides/stages.js`: mapa etapów w prawym dolnym rogu              |
+| Pole               | Wymagane | Znaczenie                                                                              |
+| ------------------ | -------- | -------------------------------------------------------------------------------------- |
+| `id`               | tak      | unikalne, trafia do URL, do nazw zrzutów i jako klucz do `timing.js`                   |
+| `summary`          | tak      | jedno zdanie o slajdzie: zapowiedź "Dalej:" w notatkach poprzedniego slajdu (D-014)    |
+| `html`             | tak      | treść slajdu, bez znacznika `<section>`                                                |
+| `notes`            | nie      | notatki prezentera (klawisz S), kliknięcia oznaczone `[klik]`                          |
+| `stage`            | nie      | klucz etapu z `src/slides/stages.js`: mapa etapów w prawym dolnym rogu                 |
 | `animate(section)` | nie      | zwraca listę segmentów `[intro, krok1, krok2, ...]`, każdy to `(tl) => { tl.to(...) }` |
 
 ```js
 export default {
   id: 'przyklad',
   stage: 'przyklad',
+  summary: 'o czym jest ten slajd',
   html: `<h2 class="slide-title">Tytuł slajdu</h2>`,
   notes: `<p>Wstęp.</p><p>[klik] Co się pojawia po kliknięciu.</p>`,
   animate(section) {
@@ -26,7 +28,12 @@ export default {
 };
 ```
 
-Notatki, czas i znaczniki `[klik]` sprawdza `npm run snapshots`.
+Notatki, czas, zapowiedź (`summary`) i znaczniki `[klik]` sprawdza `npm run snapshots`.
+
+Slajd, który musi dopasować się do decyzji podjętej na żywo, może mieć warianty: elementy
+`[data-variant="1"]`, `[data-variant="2"]` itd., z których pierwszy ma klasę `is-active`. Cyfra wciśnięta
+na tym slajdzie przełącza wariant, także z widoku prezentera (`src/lib/variants.js`, D-015). Wariant nie jest
+krokiem, więc nie ma swojego `[klik]`. Wzór: `src/slides/07-cwiczenie/s04-wyniki.js`.
 
 Mapa etapów pokazuje, na którym etapie prezentacji jesteśmy. Listę etapów (`{ key, label }`) ustala
 prezentacja w `src/slides/stages.js`. Slajd bez `stage` nie pokazuje mapy. Etap spoza listy to błąd
@@ -39,14 +46,14 @@ na starcie strony, który `npm run snapshots` zgłosi.
 - W notatkach zaznaczamy kliknięcia jako `[klik]`, żeby prelegent wiedział, co się wydarzy.
   Liczba `[klik]` musi być równa liczbie kroków.
 - Stan początkowy elementu, który zmienia się w późniejszym kroku, ustawiamy przez `gsap.set()`
-  **poza** osią czasu, a w osi używamy `to()`. Cofnięcie do zera przywraca wtedy stan z `set()`.
+  poza osią czasu, a w osi używamy `to()`. Cofnięcie do zera przywraca wtedy stan z `set()`.
 - `from()` jest dozwolone dla prostego wejścia elementu, ale nigdy dwa razy na tej samej
   właściwości tego samego elementu. Drugie `from()` zapamięta 0 jako wartość końcową
   i element już się nie pojawi. Jeśli element wchodzi w późniejszym kroku, a wcześniej był
   widoczny: `fromTo(..., { immediateRender: false })`.
 - GSAP nie interpoluje `var(--...)`. Kolory do animacji bierzemy z `token('--nazwa')` (`src/lib/theme.js`).
 - Pierwszy tween segmentu nie może mieć pozycji względnej (`'<'`, `'<0.3'`). Liczyłaby się
-  od początku ostatniego tweena **poprzedniego** kroku i animacja wjechałaby w cudzy krok.
+  od początku ostatniego tweena poprzedniego kroku i animacja wjechałaby w cudzy krok.
 - Bez pomiarów DOM (D-005): geometria ze stałych albo z metryki fontu mono.
 - Ruch, który ma być widoczny, rysujemy nad węzłami, a nie pod nimi.
 - W `html` slajdu nie używamy znacznika `<section>`: reveal.js traktuje zagnieżdżoną sekcję jako slajd pionowy.
@@ -57,7 +64,7 @@ na starcie strony, który `npm run snapshots` zgłosi.
 
 | Moduł                           | Do czego                                                                                              |
 | ------------------------------- | ----------------------------------------------------------------------------------------------------- |
-| `src/components/stage-map.js`   | mapa etapów w prawym dolnym rogu (`stage` w module slajdu, lista w `src/slides/stages.js`)             |
+| `src/components/stage-map.js`   | mapa etapów w prawym dolnym rogu (`stage` w module slajdu, lista w `src/slides/stages.js`)            |
 | `src/components/flow.js`        | diagramy przepływu: `flowColumn`, `flowRow`, `vArrow`, `vArrowUp`, `hArrow`; zwraca geometrię pudełek |
 | `src/components/space3d.js`     | przestrzeń wektorów: strzałki, punkty, siatka, lekkie kołysanie kamery                                |
 | `src/components/token-chips.js` | rząd tokenów jak w Tiktokenizerze, z numerami                                                         |
@@ -68,7 +75,7 @@ na starcie strony, który `npm run snapshots` zgłosi.
 | `src/lib/theme.js`              | `token('--nazwa')`: wartość tokenu koloru do animacji GSAP                                            |
 
 `space3d`: geometrię (`item.t`, `item.x`...) animuje oś czasu, a rysuje pętla `requestAnimationFrame`
-uruchamiana przez `space.start(() => isSlideVisible(section))`. Strzałka, która ma "wyrosnąć",
+uruchamiana przez `space.start(() => isSlideVisible(section))`. Strzałka, która ma wyrosnąć,
 dostaje `t = 0` przed zbudowaniem osi czasu. Podpis przy środku strzałki: `labelAt: 'mid'`.
 Przesunięcie strzałki: tween `x`, `y`, `z` jej obiektu.
 
@@ -82,19 +89,20 @@ i liczymy w kodzie, zamiast przepisywać je do każdego slajdu.
 
 Tylko tokeny z `src/styles/theme.css`, nigdy surowe wartości hex w slajdach. Nazwy tokenów mówią
 o barwie. Znaczenie ustala prezentacja: jeden kolor ma jedno znaczenie w całej prezentacji
-i zawsze stoi przy nim podpis (D-004). Kolumnę "Znaczenie" uzupełniamy, gdy zapadnie decyzja.
+i zawsze stoi przy nim podpis (D-004). Fioletowy nie był sprawdzany pod kątem daltonizmu razem
+z niebieskim, pomarańczowym i miętowym, więc tam, gdzie stoją obok siebie, podpis jest obowiązkowy.
 
-| Token                                  | Barwa      | Klasa w `space3d` | Klasa w `flow` | Znaczenie      |
-| -------------------------------------- | ---------- | ----------------- | -------------- | -------------- |
-| `--accent`                             | żółty      | `s3-accent`       | `is-accent`    | do ustalenia   |
-| `--c-blue`                             | niebieski  | `s3-blue`         | `is-blue`      | do ustalenia   |
-| `--c-orange`                           | pomarańcz  | `s3-orange`       | `is-orange`    | do ustalenia   |
-| `--c-mint`                             | miętowy    | `s3-mint`         | `is-mint`      | do ustalenia   |
-| `--c-violet`                           | fioletowy  | `s3-violet`       | `is-violet`    | do ustalenia   |
-| `--c-pink`                             | różowy     | `s3-pink`         | `is-pink`      | do ustalenia   |
-| `--c-slate`                            | łupkowy    | -                 | -              | do ustalenia   |
-| `--c-alert`                            | czerwony   | -                 | `is-alert`     | to, co idzie źle |
-| `--text`, `--text-dim`, `--text-muted` | tekst      | `s3-neutral`, `s3-muted` | `is-dim` | główny, drugorzędny, przypisy |
+| Token                                  | Barwa     | Klasa w `space3d`        | Klasa w `flow` | Znaczenie                                  |
+| -------------------------------------- | --------- | ------------------------ | -------------- | ------------------------------------------ |
+| `--accent`                             | żółty     | `s3-accent`              | `is-accent`    | to, na co teraz patrzymy                   |
+| `--c-blue`                             | niebieski | `s3-blue`                | `is-blue`      | faza pipeline'u i jej artefakt             |
+| `--c-orange`                           | pomarańcz | `s3-orange`              | `is-orange`    | standard                                   |
+| `--c-mint`                             | miętowy   | `s3-mint`                | `is-mint`      | automat: narzędzie, test, job w CI, hook   |
+| `--c-violet`                           | fioletowy | `s3-violet`              | `is-violet`    | człowiek: bramka, decyzja, przegląd ręczny |
+| `--c-pink`                             | różowy    | `s3-pink`                | `is-pink`      | nieużywany w tej prezentacji               |
+| `--c-slate`                            | łupkowy   | -                        | -              | obszar bez standardu                       |
+| `--c-alert`                            | czerwony  | -                        | `is-alert`     | to, co się psuje                           |
+| `--text`, `--text-dim`, `--text-muted` | tekst     | `s3-neutral`, `s3-muted` | `is-dim`       | główny, drugorzędny, przypisy              |
 
 Niebieski, pomarańczowy i miętowy są sprawdzone razem pod kątem daltonizmu, więc to one mają stać
 obok siebie, gdy trzeba rozróżnić kilka rzeczy naraz (D-004). Pozostałe pary nie były sprawdzane.
@@ -107,15 +115,33 @@ Akcent (`--accent`) to domyślnie to, na co w tej chwili patrzymy: pasek postęp
   tej ramki. Nie ustawiamy paddingu na `<section>`, bo widok druku reveal.js go zeruje.
 - IBM Plex Sans dla tekstu, IBM Plex Mono dla tokenów, liczb i kodu.
 - Dołączone podzbiory fontów (latin, latin-ext) mają polskie znaki, cudzysłowy, półpauzy, wielokropek,
-  znak mnożenia i minus, ale **nie mają** strzałek, symboli matematycznych ani greki (D-012).
+  znak mnożenia i minus, ale nie mają strzałek, symboli matematycznych ani greki (D-012).
   Te rysujemy w SVG (`icons.js`) albo zostawiamy KaTeX-owi. Inaczej przeglądarka weźmie font systemowy (D-006).
 - Minimalny rozmiar tekstu na slajdzie to 17 px (przypisy). Treść, którą sala ma przeczytać: od 24 px.
 - Prawy dolny róg należy do mapy etapów, a prawy górny do numeru slajdu.
 - Klasy wspólne: `.slide-title`, `.kicker`, `.footnote`, `.accent`, `.mono`, `.code-card`
   (`src/styles/components.css`).
 
+## Formatowanie
+
+Repozytorium stosuje standardy quantaska `standard_formatting.md` i `standard_code_quality.md` (D-017):
+
+- Prettier formatuje markdown, JavaScript i CSS: szerokość 200, bez zawijania prozy, LF, pojedyncze cudzysłowy
+  w JS (`.prettierrc`). Końce linii LF wymusza też `.gitattributes`. `npm run format` poprawia, `npm run lint` sprawdza.
+- `npm run lint` uruchamia też `scripts/style-check.mjs`: znaki zakazane z listy w `standard_formatting.md`
+  (w tym kropka środkowa, strzałki, znak mnożenia i homoglify), emotikony, pogrubienia w prozie markdownu
+  (dozwolone tylko w nagłówkach i komórkach tabel) i komentarze linijkowe w JS.
+- Zakazany znak, który slajd ma pokazać jako przykład, stoi w kodzie jako encja HTML (`&mdash;`, `&hellip;`),
+  a nie dosłownie.
+- Separator na slajdzie to zwykły myślnik, dwukropek albo przecinek, zależnie od kontekstu.
+- Cudzysłów w prozie tylko przy dosłownym cytacie, nazwie pola albo fragmencie kodu.
+- Bez komentarzy linijkowych: zamiar opisuje docstring. W CSS sekcje opisują komentarze blokowe nad nimi.
+- Bez martwego kodu w modułach prezentacji. Wyjątkiem są części silnika, których ta prezentacja nie używa
+  (D-017).
+
 ## Treść
 
 - Po polsku. Nazwy techniczne bez tłumaczenia tam, gdzie tak mówi branża.
-- Liczby po polsku przez `decimal()`: przecinek i prawdziwy minus.
+- Liczby z przecinkiem dziesiętnym. Minus i myślnik to zwykły znak `-`: znaki typograficzne są zakazane
+  (sekcja Formatowanie niżej), więc `decimal()` z `src/lib/math.js`, która stawia typograficzny minus, w tej prezentacji nie jest używana.
 - Zasady treści konkretnej prezentacji dopisujemy tutaj albo jako decyzje w `docs/decisions.md`.

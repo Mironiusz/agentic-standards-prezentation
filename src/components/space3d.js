@@ -3,7 +3,7 @@
  * strzałki między punktami i punkty z podpisami. Kolor elementu wybiera `cls`: `s3-accent`, `s3-blue`,
  * `s3-orange`, `s3-mint`, `s3-violet`, `s3-pink`, `s3-neutral`, `s3-muted`.
  *
- * Geometria żyje w zwykłych obiektach (`item.x`, `item.t`…), które animuje oś czasu GSAP.
+ * Geometria żyje w zwykłych obiektach (`item.x`, `item.t`...), które animuje oś czasu GSAP.
  * Rysowanie idzie w osobnej pętli `requestAnimationFrame`, tylko gdy slajd jest widoczny.
  * Dzięki temu przewijanie osi czasu (skoki wstecz) nie zależy od callbacków `onUpdate`,
  * a przestrzeń może się przy tym lekko kołysać jak kamera u 3Blue1Brown.
@@ -73,8 +73,12 @@ export function createSpace(group, { cx, cy, scale = 110, yaw = -0.55, pitch = 0
     const item = {
       kind: 'arrow',
       g,
-      x: vec[0], y: vec[1], z: vec[2],
-      fx: from[0], fy: from[1], fz: from[2],
+      x: vec[0],
+      y: vec[1],
+      z: vec[2],
+      fx: from[0],
+      fy: from[1],
+      fz: from[2],
       t: 1,
       labelOffset,
       labelAt,
@@ -92,7 +96,9 @@ export function createSpace(group, { cx, cy, scale = 110, yaw = -0.55, pitch = 0
     const item = {
       kind: 'point',
       g,
-      x: pos[0], y: pos[1], z: pos[2],
+      x: pos[0],
+      y: pos[1],
+      z: pos[2],
       labelOffset,
       dot: svgEl('circle', { r }, g),
       text: label ? svgEl('text', { 'text-anchor': 'middle' }, g) : null,

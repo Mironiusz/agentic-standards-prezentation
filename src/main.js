@@ -24,18 +24,21 @@ import { renderStageMap } from './components/stage-map.js';
 import { token } from './lib/theme.js';
 import { isRehearsal, startRehearsal } from './lib/rehearsal.js';
 import { addStepMarkers, bindTimelines, buildTimeline } from './lib/steps.js';
+import { bindVariants } from './lib/variants.js';
 import { slides } from './slides/index.js';
 import { STAGES } from './slides/stages.js';
 import { clock, TIMING } from './slides/timing.js';
 
 /**
  * Notatki prezentera: na górze czas slajdu i docelowa godzina jego końca (D-010),
- * a znaczniki [klik] pogrubione, żeby było je widać przy szybkim zerknięciu.
+ * a znaczniki [klik] pogrubione, żeby było je widać przy szybkim zerknięciu. Na dole zapowiedź
+ * następnego slajdu z jego pola `summary`, żeby prelegent wiedział, do czego prowadzi przejście.
  */
-function renderNotes(slide, endsAt) {
+function renderNotes(slide, endsAt, next) {
   const seconds = TIMING[slide.id];
-  const timing = seconds ? `<p><small>Czas: ${clock(seconds)} · koniec slajdu: ${clock(endsAt)}</small></p>` : '';
-  return timing + (slide.notes ?? '').replaceAll('[klik]', '<strong>[klik]</strong>');
+  const timing = seconds ? `<p><small>Czas: ${clock(seconds)} - koniec slajdu: ${clock(endsAt)}</small></p>` : '';
+  const upcoming = next ? `<p><em>Dalej: ${next.summary}</em></p>` : '';
+  return timing + (slide.notes ?? '').replaceAll('[klik]', '<strong>[klik]</strong>') + upcoming;
 }
 
 /**
@@ -47,14 +50,14 @@ function renderNotes(slide, endsAt) {
  * i wysokość `<section>`. Slajd z polem `stage` dostaje w rogu mapę etapów. `data-timing` zasila
  * zegar tempa w widoku prezentera.
  */
-function renderSection(slide, endsAt) {
+function renderSection(slide, endsAt, next) {
   const section = document.createElement('section');
   section.id = slide.id;
   section.dataset.backgroundColor = token('--bg');
   const corner = slide.stage ? `<div class="stage-corner">${renderStageMap(STAGES, slide.stage)}</div>` : '';
   section.innerHTML = `<div class="slide-frame">${slide.html}${corner}</div>`;
   if (TIMING[slide.id]) section.dataset.timing = TIMING[slide.id];
-  section.insertAdjacentHTML('beforeend', `<aside class="notes">${renderNotes(slide, endsAt)}</aside>`);
+  section.insertAdjacentHTML('beforeend', `<aside class="notes">${renderNotes(slide, endsAt, next)}</aside>`);
   return section;
 }
 
@@ -66,7 +69,7 @@ async function main() {
   const container = document.querySelector('.reveal .slides');
   const timelines = new Map();
   let elapsed = 0;
-  const sections = slides.map((slide) => renderSection(slide, (elapsed += TIMING[slide.id] ?? 0)));
+  const sections = slides.map((slide, i) => renderSection(slide, (elapsed += TIMING[slide.id] ?? 0), slides[i + 1]));
 
   for (const [i, slide] of slides.entries()) {
     const section = sections[i];
@@ -97,6 +100,7 @@ async function main() {
 
   const steps = bindTimelines(deck, timelines);
   await deck.initialize();
+  bindVariants(deck);
   if (isRehearsal() && !deck.isPrintView()) startRehearsal(deck, slides);
 
   window.__deck = {
@@ -106,6 +110,7 @@ async function main() {
       id: s.id,
       steps: timelines.get(sections[i])?.stepCount ?? 0,
       timing: TIMING[s.id] ?? 0,
+      summary: s.summary ?? '',
       clicks: (s.notes ?? '').split('[klik]').length - 1,
     })),
     totalTime: elapsed,

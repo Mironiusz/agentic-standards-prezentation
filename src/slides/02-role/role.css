@@ -1,0 +1,188 @@
+/* Blok 2: role standardów nakładane na przygaszony pipeline z bloku 1. */
+
+.reveal .role-pipe {
+  opacity: 0.32;
+}
+
+.reveal .role-focus rect {
+  fill: color-mix(in srgb, var(--accent) 12%, var(--bg));
+  stroke: var(--accent);
+  stroke-width: 2.5;
+}
+
+.reveal svg .role-focus text {
+  font-size: 25px;
+  fill: var(--accent);
+}
+
+.reveal .role-link {
+  fill: none;
+  stroke: var(--c-orange);
+  stroke-width: 2;
+  opacity: 0.7;
+}
+
+.reveal .role-link.is-dim {
+  stroke: var(--line-strong);
+  stroke-dasharray: 6 6;
+  opacity: 1;
+}
+
+.reveal .role-band rect {
+  fill: color-mix(in srgb, var(--c-orange) 10%, var(--bg));
+  stroke: var(--c-orange);
+  stroke-width: 2;
+}
+
+.reveal svg .role-band-label {
+  font-size: 26px;
+  fill: var(--c-orange);
+}
+
+.reveal svg .role-caption {
+  font-family: var(--font-mono);
+  font-size: 19px;
+  fill: var(--text-muted);
+}
+
+.reveal svg .role-head {
+  font-family: var(--font-mono);
+  font-size: 22px;
+  fill: var(--text-dim);
+}
+
+.reveal svg .role-head.is-mint {
+  fill: var(--c-mint);
+}
+
+.reveal svg .role-head.is-violet {
+  fill: var(--c-violet);
+}
+
+.reveal svg .role-head.is-accent {
+  fill: var(--accent);
+}
+
+/* 2.3: segmenty paska standardów (obrys: proces, wypełnienie: wiedza i kontrola) i czarna lista PRD */
+
+.reveal .pd-process {
+  fill: var(--bg);
+  stroke: var(--c-orange);
+  stroke-width: 2;
+}
+
+.reveal .pd-tech {
+  fill: var(--c-orange);
+}
+
+.reveal .bl-strike {
+  stroke: var(--c-alert);
+  stroke-width: 2.5;
+}
+
+/* 2.7: słabość i mechanizm */
+
+.reveal .weak-grid {
+  display: grid;
+  grid-template-columns: 330px 70px 1fr;
+  row-gap: 54px;
+  align-items: center;
+  padding-top: 60px;
+}
+
+.reveal .weak-grid > .tag.is-alert {
+  justify-self: start;
+  padding: 12px 26px;
+  font-family: var(--font-sans);
+  font-size: 30px;
+  border-radius: 14px;
+}
+
+.reveal .weak-arrow {
+  font-size: 40px;
+  color: var(--text-muted);
+}
+
+.reveal .weak-mech {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  padding: 18px 24px;
+  border: 1.5px solid var(--c-orange);
+  border-radius: 14px;
+  background: color-mix(in srgb, var(--c-orange) 8%, transparent);
+}
+
+.reveal .weak-mech .gt {
+  font-size: 30px;
+  color: var(--text-muted);
+}
+
+/* 2.4: grupy standardów z komendą i bez */
+
+.reveal .rb-frame {
+  fill: none;
+  stroke-width: 1.5;
+  stroke-dasharray: 6 6;
+}
+
+.reveal .rb-frame.is-mint {
+  stroke: var(--c-mint);
+}
+
+.reveal .rb-frame.is-violet {
+  stroke: var(--c-violet);
+}
+
+/* 2.5: DEC-3 */
+
+.reveal .rl-dec {
+  stroke: var(--accent);
+  stroke-width: 2;
+}
+
+.reveal .rl-callout {
+  fill: var(--surface);
+  stroke: var(--accent);
+  stroke-width: 1.5;
+}
+
+/* 2.6: obrys każdej fazy */
+
+.reveal .rw-outline {
+  fill: none;
+  stroke: var(--c-orange);
+  stroke-width: 3;
+}
+
+.reveal svg .rw-name {
+  font-size: 20px;
+  fill: var(--text);
+}
+
+.reveal .weak-mech .tag {
+  font-size: 20px;
+}
+
+/* 2.3: tabela faz */
+
+.reveal svg .rf-count {
+  font-family: var(--font-mono);
+  font-size: 28px;
+  fill: var(--text);
+}
+
+.reveal svg .rf-how {
+  font-size: 23px;
+  fill: var(--text);
+}
+
+.reveal svg .rf-how.is-alert {
+  fill: var(--c-alert);
+}
+
+.reveal svg .rf-legend-text {
+  font-size: 20px;
+  fill: var(--text-dim);
+}

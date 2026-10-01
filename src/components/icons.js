@@ -4,8 +4,7 @@
  * Rozmiar i kolor dziedziczą po tekście (1em, currentColor).
  */
 
-const icon = (body, label) =>
-  `<svg class="icon" viewBox="0 0 24 24" width="1em" height="1em" role="img" aria-label="${label}">${body}</svg>`;
+const icon = (body, label) => `<svg class="icon" viewBox="0 0 24 24" width="1em" height="1em" role="img" aria-label="${label}">${body}</svg>`;
 
 export const ARROW = icon('<path d="M3 12h16M13 6l6 6-6 6" />', 'do');
 export const APPROX = icon('<path d="M4 9.5c2.7-2.6 5.3-2.6 8 0s5.3 2.6 8 0M4 16.5c2.7-2.6 5.3-2.6 8 0s5.3 2.6 8 0" />', 'w przybliżeniu');

@@ -38,10 +38,12 @@ export function renderStageMap(stages, active) {
 
   const midY = TOP + H / 2;
   const nodeSvg = nodes
-    .map((n) => `<g class="sm-node${n.key === active ? ' is-active' : ''}">
+    .map(
+      (n) => `<g class="sm-node${n.key === active ? ' is-active' : ''}">
         <rect x="${n.x}" y="${TOP}" width="${n.w}" height="${H}" rx="6" />
         <text x="${n.x + n.w / 2}" y="${midY + 5}" text-anchor="middle">${n.label}</text>
-      </g>`)
+      </g>`,
+    )
     .join('');
   const arrowSvg = arrows.map((ax) => `<path class="sm-arrow" d="M${ax} ${midY - 5} l6 5 l-6 5" />`).join('');
 

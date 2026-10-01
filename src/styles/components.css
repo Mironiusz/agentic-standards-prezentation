@@ -367,3 +367,337 @@ html.reveal-print .reveal .speaker-notes-pdf strong {
 html.reveal-print .reveal .speaker-notes-pdf[data-layout='separate-page']:last-child {
   page-break-after: auto;
 }
+
+/* Płótno slajdu: rysunek SVG albo warstwa HTML w stałym miejscu pod tytułem. Slajdy, które przechodzą
+   jeden w drugi (graf -> mapa infra), mają dzięki temu te same współrzędne. */
+
+.reveal .canvas {
+  position: absolute;
+  left: var(--pad-x);
+  top: 150px;
+  width: 1440px;
+}
+
+.reveal .canvas > svg {
+  display: block;
+  overflow: visible;
+}
+
+/* Etykiety w HTML (src/slides): mono, kolor z klasy is-* */
+
+.reveal .tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 5px 16px;
+  border: 1.5px solid var(--line-strong);
+  border-radius: 9px;
+  background: var(--surface);
+  font-family: var(--font-mono);
+  font-size: 22px;
+  line-height: 1.3;
+  color: var(--text-dim);
+  white-space: nowrap;
+}
+
+.reveal .tag.is-orange {
+  --tag: var(--c-orange);
+}
+
+.reveal .tag.is-mint {
+  --tag: var(--c-mint);
+}
+
+.reveal .tag.is-violet {
+  --tag: var(--c-violet);
+}
+
+.reveal .tag.is-blue {
+  --tag: var(--c-blue);
+}
+
+.reveal .tag.is-alert {
+  --tag: var(--c-alert);
+}
+
+.reveal .tag.is-slate {
+  --tag: var(--c-slate);
+}
+
+.reveal .tag.is-accent {
+  --tag: var(--accent);
+}
+
+.reveal .tag:is(.is-orange, .is-mint, .is-violet, .is-blue, .is-alert, .is-slate, .is-accent) {
+  border-color: var(--tag);
+  color: var(--tag);
+  background: color-mix(in srgb, var(--tag) 12%, transparent);
+}
+
+.reveal .tag.is-struck {
+  text-decoration: line-through;
+  text-decoration-color: var(--c-alert);
+  text-decoration-thickness: 2px;
+}
+
+/* Kafelki SVG (src/components/tiles.js) */
+
+.reveal .tile {
+  --tile: var(--line-strong);
+}
+
+.reveal .tile rect {
+  fill: var(--surface);
+  stroke: var(--tile);
+  stroke-width: 1.5;
+}
+
+.reveal .tile text {
+  fill: var(--text);
+  font-family: var(--font-sans);
+}
+
+.reveal .tile.is-mono text,
+.reveal .tile[data-key] text {
+  font-family: var(--font-mono);
+}
+
+.reveal .tile.is-orange {
+  --tile: var(--c-orange);
+}
+
+.reveal .tile.is-mint {
+  --tile: var(--c-mint);
+}
+
+.reveal .tile.is-violet {
+  --tile: var(--c-violet);
+}
+
+.reveal .tile.is-blue {
+  --tile: var(--c-blue);
+}
+
+.reveal .tile.is-alert {
+  --tile: var(--c-alert);
+}
+
+.reveal .tile.is-slate {
+  --tile: var(--c-slate);
+}
+
+.reveal .tile.is-accent {
+  --tile: var(--accent);
+}
+
+.reveal .tile:is(.is-orange, .is-mint, .is-violet, .is-blue, .is-alert, .is-slate, .is-accent) rect {
+  fill: color-mix(in srgb, var(--tile) 16%, var(--bg));
+}
+
+.reveal .tile.is-dashed rect {
+  fill: var(--bg);
+  stroke-dasharray: 8 6;
+}
+
+.reveal .tile.is-ghost rect {
+  fill: none;
+  stroke: var(--line);
+  stroke-dasharray: 4 6;
+}
+
+.reveal .tile.is-ghost text {
+  fill: var(--text-muted);
+}
+
+.reveal .tile.is-plain rect {
+  fill: var(--surface);
+  stroke: var(--line);
+}
+
+.reveal .tile.is-plain text {
+  fill: var(--text-muted);
+}
+
+/* Pipeline (src/components/pipeline.js) */
+
+.reveal .pl-skill-line {
+  fill: none;
+  stroke: var(--line-strong);
+  stroke-width: 2;
+}
+
+.reveal svg .pl-skill-label {
+  font-family: var(--font-mono);
+  font-size: 21px;
+  fill: var(--text-dim);
+}
+
+.reveal .pl-gate-line {
+  stroke: var(--c-violet);
+  stroke-width: 1.5;
+  stroke-dasharray: 3 4;
+}
+
+.reveal .pl-gate-mark {
+  fill: var(--c-violet);
+}
+
+.reveal svg .pl-gate-label {
+  font-family: var(--font-mono);
+  font-size: 18px;
+  fill: var(--c-violet);
+}
+
+.reveal .pl-loop-line {
+  fill: none;
+  stroke: var(--text-dim);
+  stroke-width: 2;
+  stroke-dasharray: 8 6;
+}
+
+.reveal .pl-loop-head {
+  fill: var(--text-dim);
+}
+
+.reveal svg .pl-loop-label {
+  font-family: var(--font-mono);
+  font-size: 18px;
+  fill: var(--text-dim);
+}
+
+/* Klastry standardów (src/components/standards.js) */
+
+.reveal .cl-frame rect {
+  fill: none;
+  stroke: var(--line);
+  stroke-width: 1.5;
+}
+
+.reveal svg .cl-label {
+  font-family: var(--font-mono);
+  font-size: 19px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  fill: var(--text-muted);
+}
+
+/* Szkielet standardu (src/components/skeleton.js) */
+
+.reveal .sk-page {
+  fill: var(--surface);
+  stroke: var(--line-strong);
+  stroke-width: 1.5;
+}
+
+.reveal .sk-head-line {
+  stroke: var(--line-strong);
+  stroke-width: 1.5;
+}
+
+.reveal svg .sk-file {
+  font-family: var(--font-mono);
+  font-size: 19px;
+  fill: var(--text-dim);
+}
+
+.reveal .sk-box {
+  fill: var(--surface-2);
+  stroke: var(--line);
+  stroke-width: 1;
+}
+
+.reveal .sk-hi {
+  fill: var(--accent-soft);
+  stroke: var(--accent);
+  stroke-width: 2;
+  opacity: 0;
+}
+
+.reveal svg .sk-title {
+  font-family: var(--font-mono);
+  font-size: 19px;
+  fill: var(--text);
+}
+
+.reveal .sk-line {
+  fill: var(--line-strong);
+  opacity: 0.6;
+}
+
+/* Karta pliku (src/components/file-card.js) */
+
+.reveal .file-card {
+  box-sizing: border-box;
+  border: 1.5px solid var(--line-strong);
+  border-radius: 12px;
+  background: var(--surface);
+  overflow: hidden;
+}
+
+.reveal .fc-path {
+  padding: 12px 24px;
+  border-bottom: 1.5px solid var(--line);
+  background: var(--surface-2);
+  font-family: var(--font-mono);
+  font-size: 20px;
+  color: var(--text-dim);
+}
+
+.reveal .fc-body {
+  padding: 22px 28px 26px;
+  font-size: 27px;
+  line-height: 1.5;
+  color: var(--text);
+}
+
+.reveal .fc-heading {
+  margin-bottom: 12px;
+  font-family: var(--font-mono);
+  font-size: 22px;
+  color: var(--text-muted);
+}
+
+.reveal .fc-body p {
+  margin: 0 0 14px;
+}
+
+.reveal .fc-body p:last-child {
+  margin-bottom: 0;
+}
+
+.reveal .fc-body mark {
+  padding: 0 4px;
+  border-radius: 5px;
+  background: transparent;
+  color: inherit;
+}
+
+.reveal .fc-body code,
+.reveal .fc-body .mono {
+  font-family: var(--font-mono);
+  font-size: 0.88em;
+}
+
+/* Mapa infra (src/components/infra-map.js) */
+
+.reveal svg .im-band {
+  font-size: 23px;
+  fill: var(--text-dim);
+}
+
+.reveal svg .im-note {
+  font-size: 17px;
+  fill: var(--text-muted);
+}
+
+.reveal svg .tile-sub {
+  font-family: var(--font-mono);
+  font-size: 17px;
+  fill: var(--text-muted);
+}
+
+/* Warianty slajdu (src/lib/variants.js): widać tylko wybrany */
+
+.reveal [data-variant]:not(.is-active) {
+  display: none;
+}

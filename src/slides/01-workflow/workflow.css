@@ -1,0 +1,36 @@
+/* Blok 1: pipeline agentowy budowany krokami, bramki i skala. */
+
+.reveal .wf-canvas {
+  top: 230px;
+}
+
+.reveal .stats {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 24px;
+  padding-top: 120px;
+}
+
+.reveal .stat {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 30px 26px;
+  border: 1.5px solid var(--line);
+  border-radius: 16px;
+  background: var(--surface);
+}
+
+.reveal .stat-num {
+  font-family: var(--font-mono);
+  font-size: 92px;
+  font-weight: 500;
+  line-height: 1;
+  color: var(--text);
+}
+
+.reveal .stat-label {
+  font-size: 26px;
+  line-height: 1.3;
+  color: var(--text-dim);
+}
